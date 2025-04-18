@@ -15,6 +15,7 @@
  *    limitations under the License.
  */
 
+import MatterTvCastingBridge
 import SwiftUI
 
 struct MCApplicationBasicReadVendorIDExampleView: View {
