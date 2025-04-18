@@ -34,12 +34,7 @@ struct TvCastingApp: App {
                     if ProcessInfo.processInfo.environment["CHIP_CASTING_SIMPLIFIED"] == "1"
                     {
                         self.Log.info("CHIP_CASTING_SIMPLIFIED = 1")
-                        let err: Error? = MCInitializationExample.shared.initialize()
-                        if err != nil
-                        {
-                            self.Log.error("MCCastingApp initialization failed \(err)")
-                            return
-                        }
+                        MCInitializationExample.shared.initialize()
                     }
                     else
                     {
@@ -73,15 +68,12 @@ struct TvCastingApp: App {
                     self.Log.info("TvCastingApp: UIApplication.willResignActiveNotification")
                     if ProcessInfo.processInfo.environment["CHIP_CASTING_SIMPLIFIED"] == "1"
                     {
-                        if let castingApp = MCCastingApp.getSharedInstance()
-                        {
-                            castingApp.stop(completionBlock: { (err : Error?) -> () in
-                                if err != nil
-                                {
-                                    self.Log.error("MCCastingApp stop failed \(err)")
-                                }
-                            })
-                        }
+                        MCCastingApp.getSharedInstance().stop(completionBlock: { (err : Error?) -> () in
+                            if err != nil
+                            {
+                                self.Log.error("MCCastingApp stop failed \(err)")
+                            }
+                        })
                     }
                     else if let castingServerBridge = CastingServerBridge.getSharedInstance()
                     {
@@ -92,15 +84,12 @@ struct TvCastingApp: App {
                     self.Log.info("TvCastingApp: UIApplication.didBecomeActiveNotification")
                     if ProcessInfo.processInfo.environment["CHIP_CASTING_SIMPLIFIED"] == "1"
                     {
-                        if let castingApp = MCCastingApp.getSharedInstance()
-                        {
-                            castingApp.start(completionBlock: { (err : Error?) -> () in
-                                if err != nil
-                                {
-                                    self.Log.error("MCCastingApp start failed \(err)")
-                                }
-                            })
-                        }
+                        MCCastingApp.getSharedInstance().start(completionBlock: { (err : Error?) -> () in
+                            if err != nil
+                            {
+                                self.Log.error("MCCastingApp start failed \(err)")
+                            }
+                        })
                     }
                     else
                     {

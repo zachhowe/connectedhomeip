@@ -28,7 +28,7 @@
 /**
  * Returns a shared instance of the MCCastingApp
  */
-+ (MCCastingApp * _Nullable)getSharedInstance;
++ (MCCastingApp * _Nonnull)getSharedInstance;
 
 - (dispatch_queue_t _Nullable)getWorkQueue;
 

@@ -137,20 +137,13 @@ class MCInitializationExample {
         // Private initialization to ensure just one instance is created.
     }
 
-    func initialize() -> Error? {
-        if let castingApp = MCCastingApp.getSharedInstance()
-        {
-            Log.info("MCInitializationExample.initialize() calling MCCastingApp.initializeWithDataSource()")
+    func initialize() {
+        Log.info("MCInitializationExample.initialize() calling MCCastingApp.initializeWithDataSource()")
 
-            let dataSource = MCAppParametersDataSource()
-            appParametersDataSource = dataSource
+        let dataSource = MCAppParametersDataSource()
+        appParametersDataSource = dataSource
 
-            return castingApp.initialize(with: dataSource)
-        }
-        else
-        {
-            return NSError(domain: "com.matter.casting", code: Int(MATTER_ERROR_INCORRECT_STATE.code))
-        }
+        MCCastingApp.getSharedInstance().initialize(with: dataSource)
     }
 
     // Getter method for the stored instance of MCAppParametersDataSource
