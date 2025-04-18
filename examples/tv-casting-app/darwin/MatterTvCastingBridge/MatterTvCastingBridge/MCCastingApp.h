@@ -59,11 +59,11 @@
 /**
  * @brief Tears down all active subscriptions.
  */
-- (NSError * _Nullable)ShutdownAllSubscriptions;
+- (NSError * _Nullable)shutdownAllSubscriptions;
 
 /**
  * @brief Clears app cache that contains the information about CastingPlayers previously connected to
  */
-- (NSError * _Nullable)ClearCache;
+- (NSError * _Nullable)clearCache;
 
 @end

@@ -304,7 +304,7 @@ static const uint32_t kTargetPlayerDeviceType = 0x23;
 - (void)shutdownAllSubscriptions:(dispatch_queue_t _Nonnull)clientQueue requestSentHandler:(nullable void (^)())requestSentHandler
 {
     ChipLogProgress(AppServer, "CastingServerBridge().shutdownAllSubscriptions() called");
-    [[MCCastingApp getSharedInstance] ShutdownAllSubscriptions];
+    [[MCCastingApp getSharedInstance] shutdownAllSubscriptions];
     dispatch_async(clientQueue, ^{
         requestSentHandler();
     });
@@ -343,7 +343,7 @@ static const uint32_t kTargetPlayerDeviceType = 0x23;
 - (void)purgeCache:(dispatch_queue_t _Nonnull)clientQueue responseHandler:(void (^)(MatterError * _Nonnull))responseHandler
 {
     ChipLogProgress(AppServer, "CastingServerBridge().purgeCache() called");
-    NSError * err = [[MCCastingApp getSharedInstance] ClearCache];
+    NSError * err = [[MCCastingApp getSharedInstance] clearCache];
     dispatch_async(clientQueue, ^{
         responseHandler([MCErrorUtils MatterErrorFromNsError:err]);
     });

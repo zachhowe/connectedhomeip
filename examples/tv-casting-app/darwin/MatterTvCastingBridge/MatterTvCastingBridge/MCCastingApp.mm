@@ -171,7 +171,7 @@
     return running;
 }
 
-- (NSError *)ShutdownAllSubscriptions
+- (NSError *)shutdownAllSubscriptions
 {
     ChipLogProgress(AppServer, "MCCastingApp.ShutdownAllSubscriptions called");
     __block CHIP_ERROR err = CHIP_NO_ERROR;
@@ -181,7 +181,7 @@
     return [MCErrorUtils NSErrorFromChipError:err];
 }
 
-- (NSError *)ClearCache
+- (NSError *)clearCache
 {
     ChipLogProgress(AppServer, "MCCastingApp.ClearCache called");
     __block CHIP_ERROR err = CHIP_NO_ERROR;
