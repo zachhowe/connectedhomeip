@@ -17,9 +17,6 @@
 
 #import <Foundation/Foundation.h>
 
-#ifndef MCCommand_h
-#define MCCommand_h
-
 @interface MCCommand<RequestType, ResponseType> : NSObject
 
 /**
@@ -35,5 +32,3 @@
     timedInvokeTimeoutMs:(NSNumber * _Nullable)timedInvokeTimeoutMs;
 
 @end
-
-#endif /* MCCommand_h */

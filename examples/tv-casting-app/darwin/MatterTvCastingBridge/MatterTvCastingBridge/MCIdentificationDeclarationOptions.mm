@@ -15,6 +15,7 @@
  *    limitations under the License.
  */
 #import "MCIdentificationDeclarationOptions.h"
+#import "MCTargetAppInfo.h"
 
 #import "core/IdentificationDeclarationOptions.h" // from tv-casting-common
 #import "core/Types.h" // from tv-casting-common

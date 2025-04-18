@@ -19,9 +19,6 @@
 
 #include "core/Types.h"
 
-#ifndef MCRotatingDeviceIdUniqueIdProvider_h
-#define MCRotatingDeviceIdUniqueIdProvider_h
-
 namespace matter {
 namespace casting {
 namespace support {
@@ -42,5 +39,3 @@ private:
 }; // namespace support
 }; // namespace casting
 }; // namespace matter
-
-#endif /* MCRotatingDeviceIdUniqueIdProvider_h */

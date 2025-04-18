@@ -20,13 +20,8 @@
 
 #import <Foundation/Foundation.h>
 
-#ifndef MCCommissionerDeclaration_Internal_h
-#define MCCommissionerDeclaration_Internal_h
-
 @interface MCCommissionerDeclaration ()
 
 - (instancetype _Nonnull)initWithCppCommissionerDeclaration:(std::shared_ptr<chip::Protocols::UserDirectedCommissioning::CommissionerDeclaration>)cppCommissionerDeclaration;
 
 @end
-
-#endif /*  MCCommissionerDeclaration_Internal_h */

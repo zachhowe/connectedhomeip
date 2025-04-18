@@ -16,11 +16,7 @@
  */
 
 #import "MCCastingApp.h"
-
 #import <Foundation/Foundation.h>
-
-#ifndef MCCastingApp_Internal_h
-#define MCCastingApp_Internal_h
 
 @interface MCCastingApp ()
 
@@ -33,5 +29,3 @@
 - (NSError *)updateCommissionableDataProvider;
 
 @end
-
-#endif /*  MCCastingApp_Internal_h */

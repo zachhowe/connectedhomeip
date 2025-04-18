@@ -26,9 +26,6 @@
 #include <stdint.h>
 #include <vector>
 
-#ifndef MCCommissionableDataProvider_h
-#define MCCommissionableDataProvider_h
-
 namespace matter {
 namespace casting {
 namespace support {
@@ -67,5 +64,3 @@ private:
 }; // namespace support
 }; // namespace casting
 }; // namespace matter
-
-#endif /* MCCommissionableDataProvider_h */

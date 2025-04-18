@@ -18,25 +18,20 @@
 #import <Foundation/Foundation.h>
 #import <Security/Security.h>
 
-#ifndef MCDeviceAttestationCredentials_h
-#define MCDeviceAttestationCredentials_h
+NS_ASSUME_NONNULL_BEGIN
 
 @interface MCDeviceAttestationCredentials : NSObject
 
-@property (nonatomic, strong, readonly) NSData * _Nonnull certificationDeclaration;
+@property (nonatomic, strong, readonly) NSData *certificationDeclaration;
+@property (nonatomic, strong, readonly) NSData *firmwareInformation;
+@property (nonatomic, strong, readonly) NSData *deviceAttestationCert;
+@property (nonatomic, strong, readonly) NSData *productAttestationIntermediateCert;
 
-@property (nonatomic, strong, readonly) NSData * _Nonnull firmwareInformation;
-
-@property (nonatomic, strong, readonly) NSData * _Nonnull deviceAttestationCert;
-
-@property (nonatomic, strong, readonly) NSData * _Nonnull productAttestationIntermediateCert;
-
-- (MCDeviceAttestationCredentials * _Nonnull)initWithCertificationDeclaration:(NSData * _Nonnull)certificationDeclaration
-                                                          firmwareInformation:(NSData * _Nonnull)firmwareInformation
-                                                        deviceAttestationCert:(NSData * _Nonnull)deviceAttestationCert
-                                           productAttestationIntermediateCert:
-                                               (NSData * _Nonnull)productAttestationIntermediateCert;
+- (MCDeviceAttestationCredentials *)initWithCertificationDeclaration:(NSData *)certificationDeclaration
+                                                 firmwareInformation:(NSData *)firmwareInformation
+                                               deviceAttestationCert:(NSData *)deviceAttestationCert
+                                  productAttestationIntermediateCert:(NSData *)productAttestationIntermediateCert;
 
 @end
 
-#endif /* MCDeviceAttestationCredentials_h */
+NS_ASSUME_NONNULL_END

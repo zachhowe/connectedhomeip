@@ -15,16 +15,11 @@
  *    limitations under the License.
  */
 
-#import "MCConnectionCallbacks.h"
-#import "MCEndpointFilter.h"
-#import "MCIdentificationDeclarationOptions.h"
-
 #import <Foundation/Foundation.h>
 
-#ifndef MCCastingPlayer_h
-#define MCCastingPlayer_h
-
+@class MCConnectionCallbacks;
 @class MCEndpoint;
+@class MCIdentificationDeclarationOptions;
 
 /**
  * @brief Represents CastingPlayer ConnectionState.
@@ -185,5 +180,3 @@ typedef enum {
 + (nonnull instancetype)new UNAVAILABLE_ATTRIBUTE;
 
 @end
-
-#endif /* MCCastingPlayer_h */

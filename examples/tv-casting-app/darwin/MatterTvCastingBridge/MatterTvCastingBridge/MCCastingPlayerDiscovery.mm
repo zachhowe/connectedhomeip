@@ -53,7 +53,7 @@ NSString * const REMOVE_CASTING_PLAYER_NOTIFICATION_NAME = @"didRemoveCastingPla
 NSString * const UPDATE_CASTING_PLAYER_NOTIFICATION_NAME = @"didUpdateCastingPlayersNotification";
 NSString * const CASTING_PLAYER_KEY = @"castingPlayer";
 
-- init
+- (instancetype) init
 {
     self = [super init];
     if (self) {

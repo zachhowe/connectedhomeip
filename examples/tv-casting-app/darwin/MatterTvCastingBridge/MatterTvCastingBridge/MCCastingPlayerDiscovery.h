@@ -15,47 +15,48 @@
  *    limitations under the License.
  */
 
-#import "MCCastingPlayer.h"
-#import "MatterError.h"
+#import <Foundation/Foundation.h>
 
-#ifndef MCCastingPlayerDiscovery_h
-#define MCCastingPlayerDiscovery_h
+@class MCCastingPlayer;
+
+NS_ASSUME_NONNULL_BEGIN
 
 /**
  * MCCastingPlayerDiscovery sends notification with ADD_CASTING_PLAYER_NOTIFICATION_NAME
  * through the NSNotificationCenter if a new MCCastingPlayer is added to the network
  */
-extern NSString * _Nonnull const ADD_CASTING_PLAYER_NOTIFICATION_NAME;
+extern NSString * const ADD_CASTING_PLAYER_NOTIFICATION_NAME;
 
 /**
  * MCCastingPlayerDiscovery sends notification with REMOVE_CASTING_PLAYER_NOTIFICATION_NAME
  * through the NSNotificationCenter if a MCCastingPlayer is removed from the network
  */
-extern NSString * _Nonnull const REMOVE_CASTING_PLAYER_NOTIFICATION_NAME;
+extern NSString * const REMOVE_CASTING_PLAYER_NOTIFICATION_NAME;
 
 /**
  * MCCastingPlayerDiscovery sends notification with UPDATE_CASTING_PLAYER_NOTIFICATION_NAME
  * through the NSNotificationCenter if a previously added MCCastingPlayer is updated
  */
-extern NSString * _Nonnull const UPDATE_CASTING_PLAYER_NOTIFICATION_NAME;
+extern NSString * const UPDATE_CASTING_PLAYER_NOTIFICATION_NAME;
 
 /**
  * MCCastingPlayerDiscovery sends ADD / REMOVE / UPDATE notifications through the
  * NSNotificationCenter with userInfo set to an NSDictionary that has CASTING_PLAYER_KEY as the
  * key to a MCCastingPlayer object as value.
  */
-extern NSString * _Nonnull const CASTING_PLAYER_KEY;
+extern NSString * const CASTING_PLAYER_KEY;
 
 /**
  * @brief MCCastingPlayerDiscovery is a singleton utility class for discovering MCCastingPlayers.
  */
 @interface MCCastingPlayerDiscovery : NSObject
-+ (MCCastingPlayerDiscovery * _Nonnull)sharedInstance;
 
-- (nonnull instancetype)init UNAVAILABLE_ATTRIBUTE;
-+ (nonnull instancetype)new UNAVAILABLE_ATTRIBUTE;
++ (MCCastingPlayerDiscovery *)sharedInstance;
 
-@property (nonatomic, strong) NSArray<MCCastingPlayer *> * _Nonnull castingPlayers;
+- (instancetype)init UNAVAILABLE_ATTRIBUTE;
++ (instancetype)new UNAVAILABLE_ATTRIBUTE;
+
+@property (nonatomic, strong) NSArray<MCCastingPlayer *> * castingPlayers;
 
 /**
  * @brief Starts the discovery for MCCastingPlayers
@@ -82,4 +83,4 @@ extern NSString * _Nonnull const CASTING_PLAYER_KEY;
 
 @end
 
-#endif /* MCCastingPlayerDiscovery_h */
+NS_ASSUME_NONNULL_END

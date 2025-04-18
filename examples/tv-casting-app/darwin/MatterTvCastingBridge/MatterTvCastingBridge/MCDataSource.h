@@ -15,35 +15,36 @@
  *    limitations under the License.
  */
 
-#import "MCCommissionableData.h"
-#import "MCDeviceAttestationCredentials.h"
-#import "MatterError.h"
+#import <Foundation/Foundation.h>
 
-#ifndef MCDataSource_h
-#define MCDataSource_h
+@class MCCommissionableData;
+@class MCDeviceAttestationCredentials;
+@class MatterError;
+
+NS_ASSUME_NONNULL_BEGIN
 
 @protocol MCDataSource <NSObject>
 
 /**
  * @brief Queue used when calling the client code on completion blocks from any MatterTvCastingBridge API
  */
-- (dispatch_queue_t _Nonnull)clientQueue;
+- (dispatch_queue_t)clientQueue;
 
 /**
  * @brief Provide UniqueId used to generate the RotatingDeviceId advertised during commissioning by the MCCastingApp
  * Must be at least 16 bytes (i.e. ConfigurationManager::kMinRotatingDeviceIDUniqueIDLength)
  */
-- (NSData * _Nonnull)castingAppDidReceiveRequestForRotatingDeviceIdUniqueId:(id _Nonnull)sender;
+- (NSData *)castingAppDidReceiveRequestForRotatingDeviceIdUniqueId:(id)sender;
 
 /**
  * @brief Provides MCCommissionableData (such as setupPasscode, discriminator, etc) used to get the MCCastingApp commissioned
  */
-- (MCCommissionableData * _Nonnull)castingAppDidReceiveRequestForCommissionableData:(id _Nonnull)sender;
+- (MCCommissionableData *)castingAppDidReceiveRequestForCommissionableData:(id)sender;
 
 /**
  * @brief Provides MCDeviceAttestationCredentials of the MCCastingApp used during commissioning
  */
-- (MCDeviceAttestationCredentials * _Nonnull)castingAppDidReceiveRequestForDeviceAttestationCredentials:(id _Nonnull)sender;
+- (MCDeviceAttestationCredentials *)castingAppDidReceiveRequestForDeviceAttestationCredentials:(id)sender;
 
 /**
  * @brief Request to signs a message using the device attestation private key
@@ -52,8 +53,9 @@
  * @param outRawSignature [in, out] - Buffer to receive the signature in raw <r,s> format.
  * @returns MATTER_NO_ERROR on success. Otherwise, a MATTER_ERROR with a code corresponding to the underlying failure
  */
-- (MatterError * _Nonnull)castingApp:(id _Nonnull)sender didReceiveRequestToSignCertificateRequest:(NSData * _Nonnull)csrData outRawSignature:(NSData * _Nonnull * _Nonnull)outRawSignature;
+- (MatterError *)castingApp:(id)sender didReceiveRequestToSignCertificateRequest:(NSData *)csrData
+            outRawSignature:(NSData * _Nonnull * _Nonnull)outRawSignature;
 
 @end
 
-#endif /* MCDataSource_h */
+NS_ASSUME_NONNULL_END

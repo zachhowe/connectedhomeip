@@ -18,7 +18,7 @@
 import SwiftUI
 import MatterTvCastingBridge
 
-extension DiscoveredNodeData : Identifiable {
+extension DiscoveredNodeData: @retroactive Identifiable {
     public var id: String {
         instanceName
     }

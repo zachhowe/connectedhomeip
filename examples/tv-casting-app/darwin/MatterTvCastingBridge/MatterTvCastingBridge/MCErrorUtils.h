@@ -20,9 +20,6 @@
 
 #import <Foundation/Foundation.h>
 
-#ifndef MCErrorUtils_h
-#define MCErrorUtils_h
-
 /**
  * @brief - Conversion utilities to/from CHIP_ERROR (C++) / MatterError (Objective C) / NSError
  */
@@ -37,5 +34,3 @@
 + (MatterError * _Nonnull)MatterErrorFromNsError:(NSError * _Nonnull)nsError;
 
 @end
-
-#endif /* MCErrorUtils_h */

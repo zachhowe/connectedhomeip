@@ -15,12 +15,11 @@
  *    limitations under the License.
  */
 
-#import "MatterError.h"
+@class MatterError;
 
 #import <Foundation/Foundation.h>
 
-#ifndef MCCryptoUtils_h
-#define MCCryptoUtils_h
+NS_ASSUME_NONNULL_BEGIN
 
 @interface MCCryptoUtils : NSObject
 
@@ -40,8 +39,10 @@
  * to have the correct size (2 * feLengthBytes).
  * @return Returns an MatterError on error, MATTER_NO_ERROR otherwise
  */
-+ (MatterError * _Nonnull)ecdsaAsn1SignatureToRawWithFeLengthBytes:(NSUInteger)feLengthBytes asn1Signature:(CFDataRef _Nonnull)asn1Signature outRawSignature:(NSData * _Nonnull * _Nonnull)outRawSignature;
++ (MatterError *)ecdsaAsn1SignatureToRawWithFeLengthBytes:(NSUInteger)feLengthBytes
+                                            asn1Signature:(CFDataRef)asn1Signature
+                                          outRawSignature:(NSData * _Nonnull * _Nonnull)outRawSignature;
 
 @end
 
-#endif /* MCCryptoUtils_h */
+NS_ASSUME_NONNULL_END

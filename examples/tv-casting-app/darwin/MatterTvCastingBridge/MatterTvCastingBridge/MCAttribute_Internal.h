@@ -27,9 +27,6 @@
 #include <functional>
 #include <memory>
 
-#ifndef MCAttribute_Internal_h
-#define MCAttribute_Internal_h
-
 @interface MCAttribute <ObjectType>()
 
 @property (nonatomic, readwrite) void * _Nonnull cppAttribute;
@@ -127,4 +124,3 @@ private:
     void * _Nonnull mCppAttribute;
     std::function<id(std::any, CHIP_ERROR * _Nonnull)> mGetObjCTypeFromCppFn;
 };
-#endif /* MCAttribute_Internal_h */

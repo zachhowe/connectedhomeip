@@ -15,11 +15,10 @@
  *    limitations under the License.
  */
 
-#import "MCDataSource.h"
-#import "MatterError.h"
+#import <Foundation/Foundation.h>
 
-#ifndef MCCastingApp_h
-#define MCCastingApp_h
+@protocol MCDataSource;
+@class MatterError;
 
 /**
  * @brief MCCastingApp represents an app that can cast content to a Casting Player.
@@ -68,5 +67,3 @@
 - (NSError * _Nullable)ClearCache;
 
 @end
-
-#endif /* MCCastingApp_h */

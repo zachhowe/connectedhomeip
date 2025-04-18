@@ -20,13 +20,8 @@
 
 #import <Foundation/Foundation.h>
 
-#ifndef MCIdentificationDeclarationOptions_Internal_h
-#define MCIdentificationDeclarationOptions_Internal_h
-
 @interface MCIdentificationDeclarationOptions ()
 
 - (matter::casting::core::IdentificationDeclarationOptions)getCppIdentificationDeclarationOptions;
 
 @end
-
-#endif /*  MCIdentificationDeclarationOptions_Internal_h */

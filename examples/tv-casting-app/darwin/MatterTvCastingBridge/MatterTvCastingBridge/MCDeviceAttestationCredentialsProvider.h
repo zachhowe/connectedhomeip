@@ -22,10 +22,7 @@
 #include <lib/support/logging/CHIPLogging.h>
 
 #import <Foundation/Foundation.h>
-#include <Security/Security.h>
-
-#ifndef MCDeviceAttestationCredentialsProvider_h
-#define MCDeviceAttestationCredentialsProvider_h
+#import <Security/Security.h>
 
 namespace matter {
 namespace casting {
@@ -50,5 +47,3 @@ private:
 }; // namespace support
 }; // namespace casting
 }; // namespace matter
-
-#endif /* MCDeviceAttestationCredentialsProvider_h */

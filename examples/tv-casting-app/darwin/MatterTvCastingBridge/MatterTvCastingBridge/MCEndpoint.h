@@ -15,34 +15,30 @@
  *    limitations under the License.
  */
 
-#import "MCCastingPlayer.h"
-#import "MCCluster.h"
-#import "MCEndpointClusterType.h"
-
 #import <Foundation/Foundation.h>
+#import <MatterTvCastingBridge/MCEndpointClusterType.h>
 
-#ifndef MCEndpoint_h
-#define MCEndpoint_h
+NS_ASSUME_NONNULL_BEGIN
 
 @class MCCastingPlayer;
 @class MCCluster;
 
 @interface MCEndpoint : NSObject
 
-- (NSNumber * _Nonnull)identifier;
-- (NSNumber * _Nonnull)vendorId;
-- (NSNumber * _Nonnull)productId;
-- (NSArray * _Nonnull)deviceTypeList;
-- (MCCastingPlayer * _Nonnull)castingPlayer;
+- (NSNumber *)identifier;
+- (NSNumber *)vendorId;
+- (NSNumber *)productId;
+- (NSArray *)deviceTypeList;
+- (MCCastingPlayer *)castingPlayer;
 
-- (nonnull instancetype)init UNAVAILABLE_ATTRIBUTE;
-+ (nonnull instancetype)new UNAVAILABLE_ATTRIBUTE;
+- (instancetype)init UNAVAILABLE_ATTRIBUTE;
++ (instancetype)new UNAVAILABLE_ATTRIBUTE;
 
 - (BOOL)hasCluster:(MCEndpointClusterType)type;
 - (MCCluster * _Nullable)clusterForType:(MCEndpointClusterType)type;
 
-- (NSString * _Nonnull)description;
+- (NSString *)description;
 
 @end
 
-#endif /* MCEndpoint_h */
+NS_ASSUME_NONNULL_END

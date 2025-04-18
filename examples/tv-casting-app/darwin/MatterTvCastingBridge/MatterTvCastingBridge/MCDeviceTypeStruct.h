@@ -17,17 +17,15 @@
 
 #import <Foundation/Foundation.h>
 
-#ifndef MCDeviceTypeStruct_h
-#define MCDeviceTypeStruct_h
+NS_ASSUME_NONNULL_BEGIN
 
 @interface MCDeviceTypeStruct : NSObject
 
-@property (nonatomic, strong, readonly) NSNumber * _Nonnull deviceType;
+@property (nonatomic, strong, readonly) NSNumber *deviceType;
+@property (nonatomic, strong, readonly) NSNumber *revision;
 
-@property (nonatomic, strong, readonly) NSNumber * _Nonnull revision;
-
-- (instancetype _Nonnull)initWithDeviceType:(uint32_t)deviceType revision:(uint16_t)revision;
+- (instancetype)initWithDeviceType:(uint32_t)deviceType revision:(uint16_t)revision;
 
 @end
 
-#endif /* MCDeviceTypeStruct_h */
+NS_ASSUME_NONNULL_END

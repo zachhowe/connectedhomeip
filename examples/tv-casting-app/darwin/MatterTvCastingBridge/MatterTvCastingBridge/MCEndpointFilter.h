@@ -17,9 +17,6 @@
 
 #import <Foundation/Foundation.h>
 
-#ifndef MCEndpointFilter_h
-#define MCEndpointFilter_h
-
 /**
  * @brief Describes a MCEndpoint that the client wants to connect to
  */
@@ -30,4 +27,4 @@
 // std::vector<chip::app::Clusters::Descriptor::Structs::DeviceTypeStruct::DecodableType> requiredDeviceTypes;
 
 @end
-#endif /* MCEndpointFilter_h */
+

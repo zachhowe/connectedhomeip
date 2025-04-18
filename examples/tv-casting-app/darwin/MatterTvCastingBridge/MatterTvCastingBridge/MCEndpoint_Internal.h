@@ -21,15 +21,10 @@
 
 #import <Foundation/Foundation.h>
 
-#ifndef MCEndpoint_Internal_h
-#define MCEndpoint_Internal_h
-
 @interface MCEndpoint ()
 
 - (instancetype _Nonnull)initWithCppEndpoint:(matter::casting::memory::Strong<matter::casting::core::Endpoint>)cppEndpoint;
 
-- (NSMutableArray *)getServerList;
+- (NSMutableArray * _Nonnull)getServerList;
 
 @end
-
-#endif /* MCEndpoint_Internal_h */

@@ -14,11 +14,10 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-#import "MCTargetAppInfo.h"
+
 #import <Foundation/Foundation.h>
 
-#ifndef MCIdentificationDeclarationOptions_h
-#define MCIdentificationDeclarationOptions_h
+@class MCTargetAppInfo;
 
 /**
  * This class contains the optional parameters used in the IdentificationDeclaration Message, sent
@@ -75,5 +74,3 @@
 - (NSString *)description;
 
 @end
-
-#endif /* MCIdentificationDeclarationOptions_h */

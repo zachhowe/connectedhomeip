@@ -16,8 +16,7 @@
  */
 #import <Foundation/Foundation.h>
 
-#ifndef MCCommissionerDeclaration_h
-#define MCCommissionerDeclaration_h
+NS_ASSUME_NONNULL_BEGIN
 
 /**
  * Represents the Commissioner Declaration message sent by a User Directed Commissioning server
@@ -102,4 +101,4 @@ typedef NS_ENUM(NSInteger, CdError) {
 
 @end
 
-#endif /* MCCommissionerDeclaration_h */
+NS_ASSUME_NONNULL_END

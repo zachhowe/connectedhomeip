@@ -30,6 +30,7 @@ struct TvCastingApp: App {
         WindowGroup {
             ContentView()
                 .onAppear(perform: {
+
                     if ProcessInfo.processInfo.environment["CHIP_CASTING_SIMPLIFIED"] == "1"
                     {
                         self.Log.info("CHIP_CASTING_SIMPLIFIED = 1")

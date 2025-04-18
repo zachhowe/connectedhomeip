@@ -21,9 +21,6 @@
 
 #import <Foundation/Foundation.h>
 
-#ifndef MCCluster_Internal_h
-#define MCCluster_Internal_h
-
 @interface MCCluster ()
 
 @property (nonatomic, readwrite) matter::casting::memory::Strong<matter::casting::core::BaseCluster> cppCluster;
@@ -31,5 +28,3 @@
 - (instancetype _Nonnull)initWithCppCluster:(matter::casting::memory::Strong<matter::casting::core::BaseCluster>)cppCluster;
 
 @end
-
-#endif /* MCCluster_Internal_h */

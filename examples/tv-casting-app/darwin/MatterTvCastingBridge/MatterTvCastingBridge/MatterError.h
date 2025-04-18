@@ -17,8 +17,7 @@
 
 #import <Foundation/Foundation.h>
 
-#ifndef MatterError_h
-#define MatterError_h
+NS_ASSUME_NONNULL_BEGIN
 
 @interface MatterError : NSObject
 
@@ -26,12 +25,12 @@
 
 @property NSString * _Nullable message;
 
-extern MatterError * _Nonnull MATTER_NO_ERROR;
-extern MatterError * _Nonnull MATTER_ERROR_INCORRECT_STATE;
-extern MatterError * _Nonnull MATTER_ERROR_INVALID_ARGUMENT;
+extern MatterError * MATTER_NO_ERROR;
+extern MatterError * MATTER_ERROR_INCORRECT_STATE;
+extern MatterError * MATTER_ERROR_INVALID_ARGUMENT;
 
-- (MatterError * _Nonnull)initWithCode:(uint32_t)code message:(NSString * _Nullable)message;
+- (MatterError *)initWithCode:(uint32_t)code message:(NSString * _Nullable)message;
 
 @end
 
-#endif /* MatterError_h */
+NS_ASSUME_NONNULL_END

@@ -17,9 +17,6 @@
 
 #import <Foundation/Foundation.h>
 
-#ifndef MCAttribute_h
-#define MCAttribute_h
-
 @interface MCAttribute<__covariant ObjectType> : NSObject
 
 /**
@@ -42,5 +39,3 @@
       minInterval:(NSNumber * _Nonnull)minInterval
       maxInterval:(NSNumber * _Nonnull)maxInterval;
 @end
-
-#endif /* MCAttribute_h */

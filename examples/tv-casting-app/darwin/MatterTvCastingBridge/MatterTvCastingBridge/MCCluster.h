@@ -15,12 +15,9 @@
  *    limitations under the License.
  */
 
-#import "MCCommand.h"
-#import "MCEndpoint.h"
 #import <Foundation/Foundation.h>
 
-#ifndef MCCluster_h
-#define MCCluster_h
+NS_ASSUME_NONNULL_BEGIN
 
 @class MCEndpoint;
 
@@ -29,8 +26,8 @@
 /**
  * @brief Get the MCEndpoint corresponding to this MCCluster
  */
-- (MCEndpoint * _Nonnull)endpoint;
+- (MCEndpoint *)endpoint;
 
 @end
 
-#endif /* MCCluster_h */
+NS_ASSUME_NONNULL_END

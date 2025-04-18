@@ -18,7 +18,7 @@
 import SwiftUI
 import MatterTvCastingBridge
 
-extension MCCastingPlayer : Identifiable {
+extension MCCastingPlayer: @retroactive Identifiable {
     public var id: String {
         identifier()
     }

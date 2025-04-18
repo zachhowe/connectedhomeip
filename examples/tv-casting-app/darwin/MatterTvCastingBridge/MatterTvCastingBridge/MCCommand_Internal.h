@@ -27,9 +27,6 @@
 #include <functional>
 #include <memory>
 
-#ifndef MCCommand_Internal_h
-#define MCCommand_Internal_h
-
 @interface MCCommand <RequestType, ResponseType>()
 
 @property (nonatomic, readwrite) void * _Nonnull cppCommand;
@@ -95,5 +92,3 @@ private:
     std::function<std::any(id _Nonnull)> mGetCppRequestFromObjCFn;
     std::function<id(std::any)> mGetObjCResponseFromCppFn;
 };
-
-#endif /* MCCommand_Internal_h */

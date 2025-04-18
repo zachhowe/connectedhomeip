@@ -17,8 +17,7 @@
 
 #import <Foundation/Foundation.h>
 
-#ifndef MCTargetAppInfo_h
-#define MCTargetAppInfo_h
+NS_ASSUME_NONNULL_BEGIN
 
 /**
  * @brief Feature: Target Content Application - An entry in the TargetAppList which contains
@@ -33,17 +32,17 @@
 @property (nonatomic, readonly) uint16_t productId;
 
 /** Initialize with vendorId and productId set to 0 */
-- (instancetype)init;
+- (instancetype)init NS_DESIGNATED_INITIALIZER;
 
 /** Initialize with vendorId, productId defaults to 0 */
-- (instancetype _Nonnull)initWithVendorId:(uint16_t)vendorId;
+- (instancetype)initWithVendorId:(uint16_t)vendorId;
 
 /** Initialize with vendorId and productId */
-- (instancetype _Nonnull)initWithVendorId:(uint16_t)vendorId productId:(uint16_t)productId NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithVendorId:(uint16_t)vendorId productId:(uint16_t)productId NS_DESIGNATED_INITIALIZER;
 
 /** Description method */
-- (NSString * _Nonnull)description;
+- (NSString *)description;
 
 @end
 
-#endif /* MCTargetAppInfo_h */
+NS_ASSUME_NONNULL_END

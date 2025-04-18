@@ -15,12 +15,9 @@
  *    limitations under the License.
  */
 
-#import "MCCommissionerDeclaration.h"
-
 #import <Foundation/Foundation.h>
 
-#ifndef MCConnectionCallbacks_h
-#define MCConnectionCallbacks_h
+@class MCCommissionerDeclaration;
 
 /** @brief A container class for User Directed Commissioning (UDC) callbacks. */
 @interface MCConnectionCallbacks : NSObject
@@ -58,5 +55,3 @@
 @property void (^_Nullable commissionerDeclarationCallback)(MCCommissionerDeclaration * _Nonnull);
 
 @end
-
-#endif /* MCConnectionCallbacks_h */

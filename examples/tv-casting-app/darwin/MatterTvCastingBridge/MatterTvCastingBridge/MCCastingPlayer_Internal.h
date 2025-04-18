@@ -21,9 +21,6 @@
 
 #import <Foundation/Foundation.h>
 
-#ifndef MCCastingPlayer_Internal_h
-#define MCCastingPlayer_Internal_h
-
 @interface MCCastingPlayer ()
 
 + (MCCastingPlayer * _Nullable)getTargetCastingPlayer;
@@ -31,5 +28,3 @@
 - (instancetype _Nonnull)initWithCppCastingPlayer:(matter::casting::memory::Strong<matter::casting::core::CastingPlayer>)cppCastingPlayer;
 
 @end
-
-#endif /* MCCastingPlayer_Internal_h */

@@ -18,6 +18,7 @@
 #import "MCDeviceAttestationCredentialsProvider.h"
 
 #import "MCDeviceAttestationCredentials.h"
+#import "MatterError.h"
 
 #include "lib/support/logging/CHIPLogging.h"
 #include <lib/core/CHIPError.h>

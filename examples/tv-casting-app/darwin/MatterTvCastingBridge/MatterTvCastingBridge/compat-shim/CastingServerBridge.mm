@@ -31,6 +31,7 @@
 
 #import "MatterCallbacks.h"
 #import "OnboardingPayload.h"
+#import "MCTargetAppInfo.h"
 
 #include <app/data-model/ListLargeSystemExtensions.h>
 #include <credentials/DeviceAttestationCredsProvider.h>
