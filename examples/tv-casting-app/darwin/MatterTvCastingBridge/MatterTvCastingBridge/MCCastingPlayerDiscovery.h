@@ -51,7 +51,10 @@ extern NSString * const MCCastingPlayerDiscoveryCastingPlayerKey NS_SWIFT_NAME(M
  */
 @interface MCCastingPlayerDiscovery : NSObject
 
-+ (MCCastingPlayerDiscovery *)sharedInstance;
+/**
+ * Returns a shared instance of the MCCastingPlayerDiscovery
+ */
+@property (class, nonnull, readonly) MCCastingPlayerDiscovery *sharedInstance NS_SWIFT_NAME(MCCastingPlayerDiscovery.shared);
 
 - (instancetype)init UNAVAILABLE_ATTRIBUTE;
 + (instancetype)new UNAVAILABLE_ATTRIBUTE;

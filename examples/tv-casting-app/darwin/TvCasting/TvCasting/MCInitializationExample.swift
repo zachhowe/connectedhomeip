@@ -143,7 +143,7 @@ class MCInitializationExample {
         let dataSource = MCAppParametersDataSource()
         appParametersDataSource = dataSource
 
-        MCCastingApp.getSharedInstance().initialize(with: dataSource)
+        MCCastingApp.shared.initialize(with: dataSource)
     }
 
     // Getter method for the stored instance of MCAppParametersDataSource

@@ -68,7 +68,7 @@ struct TvCastingApp: App {
                     self.Log.info("TvCastingApp: UIApplication.willResignActiveNotification")
                     if ProcessInfo.processInfo.environment["CHIP_CASTING_SIMPLIFIED"] == "1"
                     {
-                        MCCastingApp.getSharedInstance().stop(completionBlock: { (err : Error?) -> () in
+                        MCCastingApp.shared.stop(completionBlock: { (err : Error?) -> () in
                             if err != nil
                             {
                                 self.Log.error("MCCastingApp stop failed \(err)")
@@ -84,7 +84,7 @@ struct TvCastingApp: App {
                     self.Log.info("TvCastingApp: UIApplication.didBecomeActiveNotification")
                     if ProcessInfo.processInfo.environment["CHIP_CASTING_SIMPLIFIED"] == "1"
                     {
-                        MCCastingApp.getSharedInstance().start(completionBlock: { (err : Error?) -> () in
+                        MCCastingApp.shared.start(completionBlock: { (err : Error?) -> () in
                             if err != nil
                             {
                                 self.Log.error("MCCastingApp start failed \(err)")

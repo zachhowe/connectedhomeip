@@ -37,7 +37,7 @@ class MCDiscoveryExampleViewModel: ObservableObject {
         NotificationCenter.default.addObserver(self, selector: #selector(self.didRemoveDiscoveredCastingPlayers), name: MCCastingPlayerDiscovery.removeCastingPlayerNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.didUpdateDiscoveredCastingPlayers), name: MCCastingPlayerDiscovery.updateCastingPlayerNotification, object: nil)
 
-        if let err:Error = MCCastingPlayerDiscovery.sharedInstance().start(UInt32(kTargetPlayerDeviceType))
+        if let err:Error = MCCastingPlayerDiscovery.shared.start(UInt32(kTargetPlayerDeviceType))
         {
             Log.error("MCCastingPlayerDiscovery.start failed with \(err)")
             self.discoveryHasError = true
@@ -47,7 +47,7 @@ class MCDiscoveryExampleViewModel: ObservableObject {
     
     func stopDiscovery() {
         Log.info("stopDiscovery() called")
-        if let err:Error = MCCastingPlayerDiscovery.sharedInstance().stop()
+        if let err:Error = MCCastingPlayerDiscovery.shared.stop()
         {
             Log.error("MCCastingPlayerDiscovery.stop failed with \(err)")
             self.discoveryHasError = true

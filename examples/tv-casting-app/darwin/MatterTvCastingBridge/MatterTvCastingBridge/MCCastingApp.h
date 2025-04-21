@@ -28,7 +28,7 @@
 /**
  * Returns a shared instance of the MCCastingApp
  */
-+ (MCCastingApp * _Nonnull)getSharedInstance;
+@property (class, nonnull, readonly) MCCastingApp *getSharedInstance NS_SWIFT_NAME(MCCastingApp.shared);
 
 - (dispatch_queue_t _Nullable)getWorkQueue;
 
