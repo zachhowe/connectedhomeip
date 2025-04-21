@@ -22,29 +22,29 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * MCCastingPlayerDiscovery sends notification with ADD_CASTING_PLAYER_NOTIFICATION_NAME
+ * MCCastingPlayerDiscovery sends notification with MCCastingPlayerDiscoveryAddCastingPlayerNotification
  * through the NSNotificationCenter if a new MCCastingPlayer is added to the network
  */
-extern NSString * const ADD_CASTING_PLAYER_NOTIFICATION_NAME;
+extern NSNotificationName const MCCastingPlayerDiscoveryAddCastingPlayerNotification NS_SWIFT_NAME(MCCastingPlayerDiscovery.addCastingPlayerNotification);
 
 /**
- * MCCastingPlayerDiscovery sends notification with REMOVE_CASTING_PLAYER_NOTIFICATION_NAME
+ * MCCastingPlayerDiscovery sends notification with MCCastingPlayerDiscoveryRemoveCastingPlayerNotification
  * through the NSNotificationCenter if a MCCastingPlayer is removed from the network
  */
-extern NSString * const REMOVE_CASTING_PLAYER_NOTIFICATION_NAME;
+extern NSNotificationName const MCCastingPlayerDiscoveryRemoveCastingPlayerNotification NS_SWIFT_NAME(MCCastingPlayerDiscovery.removeCastingPlayerNotification);
 
 /**
- * MCCastingPlayerDiscovery sends notification with UPDATE_CASTING_PLAYER_NOTIFICATION_NAME
+ * MCCastingPlayerDiscovery sends notification with MCCastingPlayerDiscoveryUpdateCastingPlayer
  * through the NSNotificationCenter if a previously added MCCastingPlayer is updated
  */
-extern NSString * const UPDATE_CASTING_PLAYER_NOTIFICATION_NAME;
+extern NSNotificationName const MCCastingPlayerDiscoveryUpdateCastingPlayer NS_SWIFT_NAME(MCCastingPlayerDiscovery.updateCastingPlayerNotification);
 
 /**
  * MCCastingPlayerDiscovery sends ADD / REMOVE / UPDATE notifications through the
  * NSNotificationCenter with userInfo set to an NSDictionary that has CASTING_PLAYER_KEY as the
  * key to a MCCastingPlayer object as value.
  */
-extern NSString * const CASTING_PLAYER_KEY;
+extern NSString * const MCCastingPlayerDiscoveryCastingPlayerKey NS_SWIFT_NAME(MCCastingPlayerDiscovery.castingPlayerKey);
 
 /**
  * @brief MCCastingPlayerDiscovery is a singleton utility class for discovering MCCastingPlayers.

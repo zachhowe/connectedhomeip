@@ -33,9 +33,9 @@ class MCDiscoveryExampleViewModel: ObservableObject {
         clearResults()
         
         // add observers
-        NotificationCenter.default.addObserver(self, selector: #selector(self.didAddDiscoveredCastingPlayers), name: NSNotification.Name(ADD_CASTING_PLAYER_NOTIFICATION_NAME), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.didRemoveDiscoveredCastingPlayers), name: NSNotification.Name(REMOVE_CASTING_PLAYER_NOTIFICATION_NAME), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.didUpdateDiscoveredCastingPlayers), name: NSNotification.Name(UPDATE_CASTING_PLAYER_NOTIFICATION_NAME), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.didAddDiscoveredCastingPlayers), name: MCCastingPlayerDiscovery.addCastingPlayerNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.didRemoveDiscoveredCastingPlayers), name: MCCastingPlayerDiscovery.removeCastingPlayerNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.didUpdateDiscoveredCastingPlayers), name: MCCastingPlayerDiscovery.updateCastingPlayerNotification, object: nil)
 
         if let err:Error = MCCastingPlayerDiscovery.sharedInstance().start(UInt32(kTargetPlayerDeviceType))
         {
@@ -55,9 +55,9 @@ class MCDiscoveryExampleViewModel: ObservableObject {
         else
         {
             // remove observers
-            NotificationCenter.default.removeObserver(self, name: NSNotification.Name(ADD_CASTING_PLAYER_NOTIFICATION_NAME), object: nil)
-            NotificationCenter.default.removeObserver(self, name: NSNotification.Name(REMOVE_CASTING_PLAYER_NOTIFICATION_NAME), object: nil)
-            NotificationCenter.default.removeObserver(self, name: NSNotification.Name(UPDATE_CASTING_PLAYER_NOTIFICATION_NAME), object: nil)
+            NotificationCenter.default.removeObserver(self, name: MCCastingPlayerDiscovery.addCastingPlayerNotification, object: nil)
+            NotificationCenter.default.removeObserver(self, name: MCCastingPlayerDiscovery.removeCastingPlayerNotification, object: nil)
+            NotificationCenter.default.removeObserver(self, name: MCCastingPlayerDiscovery.updateCastingPlayerNotification, object: nil)
         }
         self.discoveryHasError = false
     }
@@ -75,7 +75,7 @@ class MCDiscoveryExampleViewModel: ObservableObject {
     {
         Log.info("didAddDiscoveredCastingPlayers() called")
         guard let userInfo = notification.userInfo,
-            let castingPlayer     = userInfo["castingPlayer"] as? MCCastingPlayer else {
+            let castingPlayer     = userInfo[MCCastingPlayerDiscovery.castingPlayerKey] as? MCCastingPlayer else {
             self.Log.error("didAddDiscoveredCastingPlayers called with no MCCastingPlayer")
             return
         }
@@ -93,7 +93,7 @@ class MCDiscoveryExampleViewModel: ObservableObject {
     {
         Log.info("didRemoveDiscoveredCastingPlayers() called")
         guard let userInfo = notification.userInfo,
-            let castingPlayer     = userInfo["castingPlayer"] as? MCCastingPlayer else {
+            let castingPlayer     = userInfo[MCCastingPlayerDiscovery.castingPlayerKey] as? MCCastingPlayer else {
             self.Log.error("didRemoveDiscoveredCastingPlayers called with no MCCastingPlayer")
             return
         }
@@ -110,7 +110,7 @@ class MCDiscoveryExampleViewModel: ObservableObject {
     {
         Log.info("didUpdateDiscoveredCastingPlayers() called")
         guard let userInfo = notification.userInfo,
-            let castingPlayer     = userInfo["castingPlayer"] as? MCCastingPlayer else {
+            let castingPlayer     = userInfo[MCCastingPlayerDiscovery.castingPlayerKey] as? MCCastingPlayer else {
             self.Log.error("didUpdateDiscoveredCastingPlayers called with no MCCastingPlayer")
             return
         }

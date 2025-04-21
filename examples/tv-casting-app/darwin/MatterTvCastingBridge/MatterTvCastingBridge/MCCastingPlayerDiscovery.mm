@@ -48,10 +48,10 @@ public:
 
 @implementation MCCastingPlayerDiscovery
 
-NSString * const ADD_CASTING_PLAYER_NOTIFICATION_NAME = @"didAddCastingPlayersNotification";
-NSString * const REMOVE_CASTING_PLAYER_NOTIFICATION_NAME = @"didRemoveCastingPlayersNotification";
-NSString * const UPDATE_CASTING_PLAYER_NOTIFICATION_NAME = @"didUpdateCastingPlayersNotification";
-NSString * const CASTING_PLAYER_KEY = @"castingPlayer";
+NSNotificationName const MCCastingPlayerDiscoveryAddCastingPlayerNotification = @"MCCastingPlayerDiscoveryAddCastingPlayerNotification";
+NSNotificationName const MCCastingPlayerDiscoveryRemoveCastingPlayerNotification = @"MCCastingPlayerDiscoveryRemoveCastingPlayerNotification";
+NSNotificationName const MCCastingPlayerDiscoveryUpdateCastingPlayer = @"MCCastingPlayerDiscoveryUpdateCastingPlayer";
+NSString * const MCCastingPlayerDiscoveryCastingPlayerKey = @"castingPlayer";
 
 - (instancetype) init
 {
@@ -127,8 +127,8 @@ void MCDiscoveryDelegateImpl::HandleOnAdded(matter::casting::memory::Strong<matt
     VerifyOrReturn(clientQueue != nil, ChipLogError(AppServer, "MCDiscoveryDelegateImpl::HandleOnAdded ClientQueue was nil"));
     VerifyOrReturn(castingPlayer != nil, ChipLogError(AppServer, "MCDiscoveryDelegateImpl::HandleOnAdded Cpp CastingPlayer was nil"));
     dispatch_async(clientQueue, ^{
-        NSDictionary * dictionary = @ { CASTING_PLAYER_KEY : [[MCCastingPlayer alloc] initWithCppCastingPlayer:castingPlayer] };
-        [[NSNotificationCenter defaultCenter] postNotificationName:ADD_CASTING_PLAYER_NOTIFICATION_NAME object:nil userInfo:dictionary];
+        NSDictionary * dictionary = @ { MCCastingPlayerDiscoveryCastingPlayerKey : [[MCCastingPlayer alloc] initWithCppCastingPlayer:castingPlayer] };
+        [[NSNotificationCenter defaultCenter] postNotificationName:MCCastingPlayerDiscoveryAddCastingPlayerNotification object:nil userInfo:dictionary];
     });
 }
 
@@ -138,7 +138,7 @@ void MCDiscoveryDelegateImpl::HandleOnUpdated(matter::casting::memory::Strong<ma
     dispatch_queue_t clientQueue = [[MCCastingApp getSharedInstance] getClientQueue];
     VerifyOrReturn(clientQueue != nil);
     dispatch_async(clientQueue, ^{
-        NSDictionary * dictionary = @ { CASTING_PLAYER_KEY : [[MCCastingPlayer alloc] initWithCppCastingPlayer:castingPlayer] };
-        [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_CASTING_PLAYER_NOTIFICATION_NAME object:nil userInfo:dictionary];
+        NSDictionary * dictionary = @ { MCCastingPlayerDiscoveryCastingPlayerKey : [[MCCastingPlayer alloc] initWithCppCastingPlayer:castingPlayer] };
+        [[NSNotificationCenter defaultCenter] postNotificationName:MCCastingPlayerDiscoveryUpdateCastingPlayer object:nil userInfo:dictionary];
     });
 }

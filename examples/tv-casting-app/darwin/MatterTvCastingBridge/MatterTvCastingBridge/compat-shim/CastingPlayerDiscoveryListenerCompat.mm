@@ -67,12 +67,12 @@ static void (^_discoveredCommissionerHandler)(DiscoveredNodeData * _Nullable);
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didAddDiscoveredCastingPlayers:)
-                                                 name:ADD_CASTING_PLAYER_NOTIFICATION_NAME
+                                                 name:MCCastingPlayerDiscoveryAddCastingPlayerNotification
                                                object:nil];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didUpdateDiscoveredCastingPlayers:)
-                                                 name:UPDATE_CASTING_PLAYER_NOTIFICATION_NAME
+                                                 name:MCCastingPlayerDiscoveryUpdateCastingPlayer
                                                object:nil];
 }
 
@@ -80,10 +80,10 @@ static void (^_discoveredCommissionerHandler)(DiscoveredNodeData * _Nullable);
 {
     ChipLogProgress(AppServer, "CastingPlayerDiscoveryListenerCompat.removeObservers() called");
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:ADD_CASTING_PLAYER_NOTIFICATION_NAME
+                                                    name:MCCastingPlayerDiscoveryAddCastingPlayerNotification
                                                   object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UPDATE_CASTING_PLAYER_NOTIFICATION_NAME
+                                                    name:MCCastingPlayerDiscoveryUpdateCastingPlayer
                                                   object:nil];
 }
 
@@ -94,7 +94,7 @@ static void (^_discoveredCommissionerHandler)(DiscoveredNodeData * _Nullable);
     VerifyOrReturn(CastingPlayerDiscoveryListenerCompat.discoveredCommissionerHandler != nil);
 
     NSDictionary * userInfo = notification.userInfo;
-    MCCastingPlayer * castingPlayer = userInfo[CASTING_PLAYER_KEY];
+    MCCastingPlayer * castingPlayer = userInfo[MCCastingPlayerDiscoveryCastingPlayerKey];
 
     if (![castingPlayer isKindOfClass:[MCCastingPlayer class]]) {
         ChipLogError(AppServer, "CastingPlayerDiscoveryListenerCompat.didAddDiscoveredCastingPlayers called with no MCCastingPlayer");
@@ -116,7 +116,7 @@ static void (^_discoveredCommissionerHandler)(DiscoveredNodeData * _Nullable);
     VerifyOrReturn(CastingPlayerDiscoveryListenerCompat.discoveredCommissionerHandler != nil);
 
     NSDictionary * userInfo = notification.userInfo;
-    MCCastingPlayer * castingPlayer = userInfo[CASTING_PLAYER_KEY];
+    MCCastingPlayer * castingPlayer = userInfo[MCCastingPlayerDiscoveryCastingPlayerKey];
 
     if (![castingPlayer isKindOfClass:[MCCastingPlayer class]]) {
         ChipLogError(AppServer, "CastingPlayerDiscoveryListenerCompat.didUpdateDiscoveredCastingPlayers called with no MCCastingPlayer");
