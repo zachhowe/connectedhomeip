@@ -75,29 +75,37 @@ NSString * const MCCastingPlayerDiscoveryCastingPlayerKey = @"castingPlayer";
     return instance;
 }
 
-- (NSError *)start
+- (BOOL)start:(NSError **)error
 {
-    return [self start:0]; // default to filterBydeviceType: 0
+    return [self start:0 error:error]; // default to filterBydeviceType: 0
 }
 
-- (NSError *)start:(const uint32_t)filterBydeviceType
+- (BOOL)start:(const uint32_t)filterByDeviceType error:(NSError **)error
 {
     ChipLogProgress(AppServer, "MCCastingPlayerDiscovery.start called");
-    VerifyOrReturnValue([[MCCastingApp getSharedInstance] isRunning], [MCErrorUtils NSErrorFromChipError:CHIP_ERROR_INCORRECT_STATE]);
+    if (![[MCCastingApp getSharedInstance] isRunning]) {
+        if (error) { *error = [MCErrorUtils NSErrorFromChipError:CHIP_ERROR_INCORRECT_STATE]; }
+        return NO;
+    }
 
     dispatch_queue_t workQueue = [[MCCastingApp getSharedInstance] getWorkQueue];
     __block CHIP_ERROR err = CHIP_NO_ERROR;
     dispatch_sync(workQueue, ^{
-        err = core::CastingPlayerDiscovery::GetInstance()->StartDiscovery(filterBydeviceType);
+        err = core::CastingPlayerDiscovery::GetInstance()->StartDiscovery(filterByDeviceType);
     });
-
-    return [MCErrorUtils NSErrorFromChipError:err];
+    
+    NSError *actualError = [MCErrorUtils NSErrorFromChipError:err];
+    if (error) { *error = actualError; }
+    return actualError == nil;
 }
 
-- (NSError *)stop
+- (BOOL)stop:(NSError**)error
 {
     ChipLogProgress(AppServer, "MCCastingPlayerDiscovery.stop called");
-    VerifyOrReturnValue([[MCCastingApp getSharedInstance] isRunning], [MCErrorUtils NSErrorFromChipError:CHIP_ERROR_INCORRECT_STATE]);
+    if (![[MCCastingApp getSharedInstance] isRunning]) {
+        if (error) { *error = [MCErrorUtils NSErrorFromChipError:CHIP_ERROR_INCORRECT_STATE]; }
+        return NO;
+    }
 
     dispatch_queue_t workQueue = [[MCCastingApp getSharedInstance] getWorkQueue];
     __block CHIP_ERROR err = CHIP_NO_ERROR;
@@ -105,7 +113,9 @@ NSString * const MCCastingPlayerDiscoveryCastingPlayerKey = @"castingPlayer";
         err = core::CastingPlayerDiscovery::GetInstance()->StopDiscovery();
     });
 
-    return [MCErrorUtils NSErrorFromChipError:err];
+    NSError *actualError = [MCErrorUtils NSErrorFromChipError:err];
+    if (error) { *error = actualError; }
+    return actualError == nil;
 }
 
 @end

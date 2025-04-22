@@ -22,7 +22,7 @@ import MatterTvCastingBridge
 class MCDiscoveryExampleViewModel: ObservableObject {
     let Log = Logger(subsystem: "com.matter.casting",
                      category: "MCDiscoveryExampleViewModel")
-    let kTargetPlayerDeviceType: UInt64 = 35
+    let kTargetPlayerDeviceType: UInt32 = 35
     
     @Published var displayedCastingPlayers: [MCCastingPlayer] = []
     
@@ -37,29 +37,27 @@ class MCDiscoveryExampleViewModel: ObservableObject {
         NotificationCenter.default.addObserver(self, selector: #selector(self.didRemoveDiscoveredCastingPlayers), name: MCCastingPlayerDiscovery.removeCastingPlayerNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.didUpdateDiscoveredCastingPlayers), name: MCCastingPlayerDiscovery.updateCastingPlayerNotification, object: nil)
 
-        if let err:Error = MCCastingPlayerDiscovery.shared.start(UInt32(kTargetPlayerDeviceType))
-        {
-            Log.error("MCCastingPlayerDiscovery.start failed with \(err)")
+        do {
+            try MCCastingPlayerDiscovery.shared.start(filterByDeviceType: kTargetPlayerDeviceType)
+            self.discoveryHasError = false
+        } catch {
+            Log.error("MCCastingPlayerDiscovery.start failed with \(error)")
             self.discoveryHasError = true
         }
-        self.discoveryHasError = false
     }
     
     func stopDiscovery() {
         Log.info("stopDiscovery() called")
-        if let err:Error = MCCastingPlayerDiscovery.shared.stop()
-        {
-            Log.error("MCCastingPlayerDiscovery.stop failed with \(err)")
-            self.discoveryHasError = true
-        }
-        else
-        {
-            // remove observers
+        do {
+            try MCCastingPlayerDiscovery.shared.stop()
             NotificationCenter.default.removeObserver(self, name: MCCastingPlayerDiscovery.addCastingPlayerNotification, object: nil)
             NotificationCenter.default.removeObserver(self, name: MCCastingPlayerDiscovery.removeCastingPlayerNotification, object: nil)
             NotificationCenter.default.removeObserver(self, name: MCCastingPlayerDiscovery.updateCastingPlayerNotification, object: nil)
+            self.discoveryHasError = false
+        } catch {
+            Log.error("MCCastingPlayerDiscovery.stop failed with \(error)")
+            self.discoveryHasError = true
         }
-        self.discoveryHasError = false
     }
     
     func clearResults() {

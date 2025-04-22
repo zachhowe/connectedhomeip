@@ -141,7 +141,8 @@ static const uint32_t kTargetPlayerDeviceType = 0x23;
     });
 
     // stop previously triggered discovery and remove observers, if any
-    NSError * e = [MCCastingPlayerDiscovery.sharedInstance stop];
+    NSError * e;
+    [MCCastingPlayerDiscovery.sharedInstance stop:&e];
     if (e != nil) {
         ChipLogError(AppServer, "CastingServerBridge().discoverCommissioners() MCCastingPlayerDiscovery stop error: %@", e.description);
     }
@@ -149,7 +150,10 @@ static const uint32_t kTargetPlayerDeviceType = 0x23;
 
     // add observers and start discovery
     [CastingPlayerDiscoveryListenerCompat addObservers:clientQueue discoveredCommissionerHandler:discoveredCommissionerHandler];
-    NSError * err = [MCCastingPlayerDiscovery.sharedInstance start:kTargetPlayerDeviceType];
+    
+    NSError *err;
+    [MCCastingPlayerDiscovery.sharedInstance start:kTargetPlayerDeviceType error:&err];
+
     if (err == nil) {
         // if positive timeoutInSeconds specified, dispatch call to cancel this discovery request AFTER timeoutInSeconds
         if (timeoutInSeconds > 0) {
@@ -162,7 +166,8 @@ static const uint32_t kTargetPlayerDeviceType = 0x23;
 
                       // stop previously triggered discovery and remove observers, if any
                       ChipLogProgress(AppServer, "CastingServerBridge().discoverCommissioners() canceling previous discovery request");
-                      NSError * e = [MCCastingPlayerDiscovery.sharedInstance stop];
+                      NSError * e;
+                      [MCCastingPlayerDiscovery.sharedInstance stop:&e];
                       if (e != nil) {
                           ChipLogError(AppServer, "CastingServerBridge().discoverCommissioners() MCCastingPlayerDiscovery stop error: %@", e.description);
                       }

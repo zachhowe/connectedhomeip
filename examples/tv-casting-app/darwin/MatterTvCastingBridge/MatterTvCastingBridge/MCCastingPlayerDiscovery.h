@@ -64,25 +64,31 @@ extern NSString * const MCCastingPlayerDiscoveryCastingPlayerKey NS_SWIFT_NAME(M
 /**
  * @brief Starts the discovery for MCCastingPlayers
  *
- * @return Returns nil if discovery for CastingPlayers started successfully, NSError * describing the error otherwise.
+ * @param error Returns nil if discovery for CastingPlayers started successfully, NSError * describing the error otherwise.
+ *
+ * @returns YES on success, NO on failure
  */
-- (NSError * _Nullable)start;
+- (BOOL)start:(NSError **)error;
 
 /**
  * @brief Starts the discovery for MCCastingPlayers
  *
- * @param filterBydeviceType if passed as a non-zero value, MCCastingPlayerDiscovery will only discover
+ * @param filterByDeviceType if passed as a non-zero value, MCCastingPlayerDiscovery will only discover
  * MCCastingPlayers whose deviceType matches filterBydeviceType
- * @return Returns nil if discovery for MCCastingPlayers started successfully, NSError * describing the error otherwise.
+ * @param error Returns nil if discovery for MCCastingPlayers started successfully, NSError * describing the error otherwise.
+ *
+ * @returns YES on success, NO on failure
  */
-- (NSError * _Nullable)start:(const uint32_t)filterBydeviceType;
+- (BOOL)start:(const uint32_t)filterByDeviceType error:(NSError **)error NS_SWIFT_NAME(start(filterByDeviceType:));
 
 /**
  * @brief Stop the discovery for MCCastingPlayers
  *
- * @return Returns nil if discovery for MCCastingPlayers stopped successfully, NSError * describing the error otherwise.
+ * @param error Returns nil if discovery for MCCastingPlayers stopped successfully, NSError * describing the error otherwise.
+ *
+ * @returns YES on success, NO on failure
  */
-- (NSError * _Nullable)stop;
+- (BOOL)stop:(NSError **)error;
 
 @end
 
