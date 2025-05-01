@@ -167,6 +167,7 @@ typedef enum {
 - (uint32_t)deviceType;
 - (bool)supportsCommissionerGeneratedPasscode;
 - (NSArray<NSString *> * _Nonnull)ipAddresses;
+@property (nonatomic, readonly) uint16_t port;
 - (NSString * _Nonnull)hostName;
 - (NSString * _Nonnull)instanceName;
 

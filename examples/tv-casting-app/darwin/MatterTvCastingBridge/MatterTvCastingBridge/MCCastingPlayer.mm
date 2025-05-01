@@ -299,6 +299,10 @@ static const NSInteger kMinCommissioningWindowTimeoutSec = matter::casting::core
     return ipAddresses;
 }
 
+- (uint16_t)port {
+    return _cppCastingPlayer->GetPort();
+}
+
 - (NSArray<MCEndpoint *> * _Nonnull)endpoints
 {
     NSMutableArray * endpoints = [NSMutableArray new];
