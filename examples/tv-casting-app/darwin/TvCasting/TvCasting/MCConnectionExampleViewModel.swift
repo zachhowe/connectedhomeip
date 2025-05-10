@@ -45,23 +45,23 @@ class MCConnectionExampleViewModel: ObservableObject {
 
     func cancelConnectionAttempt(selectedCastingPlayer: MCCastingPlayer?) {
         DispatchQueue.main.async {
-            // Only stop connection if we are pending passcode confirmation
-            var connectionState = MC_CASTING_PLAYER_NOT_CONNECTED;
-            let err = selectedCastingPlayer?.getConnectionState(&connectionState)
-            if err != nil {
-                self.Log.error("MCConnectionExampleViewModel cancelConnect() MCCastingPlayer.getConnectionState() failed due to: \(err)")
-            }
+            do {
+                var connectionState: MCCastingPlayerConnectionState = .notConnected
+                try selectedCastingPlayer?.getConnectionState(&connectionState)
 
-            if connectionState == MC_CASTING_PLAYER_CONNECTING {
-                self.Log.info("MCConnectionExampleViewModel cancelConnect(). User navigating back from ConnectionView")
-                let err = selectedCastingPlayer?.stopConnecting()
-                if err == nil {
-                    self.connectionStatus = "User cancelled the connection attempt with CastingPlayer.stopConnecting()."
-                    self.Log.info("MCConnectionExampleViewModel cancelConnect() MCCastingPlayer.stopConnecting() succeeded.")
-                } else {
-                    self.connectionStatus = "Cancel connection failed due to: \(String(describing: err))."
-                    self.Log.error("MCConnectionExampleViewModel cancelConnect() MCCastingPlayer.stopConnecting() failed due to: \(err)")
+                if connectionState == .connecting {
+                    self.Log.info("MCConnectionExampleViewModel cancelConnect(). User navigating back from ConnectionView")
+                    let err = selectedCastingPlayer?.stopConnecting()
+                    if err == nil {
+                        self.connectionStatus = "User cancelled the connection attempt with CastingPlayer.stopConnecting()."
+                        self.Log.info("MCConnectionExampleViewModel cancelConnect() MCCastingPlayer.stopConnecting() succeeded.")
+                    } else {
+                        self.connectionStatus = "Cancel connection failed due to: \(String(describing: err))."
+                        self.Log.error("MCConnectionExampleViewModel cancelConnect() MCCastingPlayer.stopConnecting() failed due to: \(err)")
+                    }
                 }
+            } catch {
+                self.Log.error("MCConnectionExampleViewModel cancelConnect() MCCastingPlayer.getConnectionState() failed due to: \(error)")
             }
         }
     }
