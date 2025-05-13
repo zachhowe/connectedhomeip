@@ -20,6 +20,8 @@
 #import "core/IdentificationDeclarationOptions.h" // from tv-casting-common
 #import "core/Types.h" // from tv-casting-common
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface MCIdentificationDeclarationOptions ()
 
 /**
@@ -143,3 +145,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
