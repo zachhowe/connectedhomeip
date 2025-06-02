@@ -19,8 +19,8 @@
 
 @implementation MCConnectionCallbacks
 
-- (instancetype _Nonnull)initWithCallbacks:(void (^_Nonnull)(NSError * _Nonnull))connectionCompleteCallback
-           commissionerDeclarationCallback:(void (^_Nullable)(MCCommissionerDeclaration * _Nonnull))commissionerDeclarationCallback
+- (instancetype)initWithConnectionCompleteCallback:(MCConnectionCompleteCallback)connectionCompleteCallback
+                   commissionerDeclarationCallback:(MCCommissionerDeclarationCallback)commissionerDeclarationCallback
 {
     self = [super init];
     if (self) {

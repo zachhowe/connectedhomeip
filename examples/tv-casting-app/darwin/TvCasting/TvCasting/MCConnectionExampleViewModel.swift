@@ -164,14 +164,14 @@ class MCConnectionExampleViewModel: ObservableObject {
             identificationDeclarationOptions = MCIdentificationDeclarationOptions(commissionerPasscodeOnly: true)
             targetAppInfo = MCTargetAppInfo(vendorId: kDesiredEndpointVendorIdCGP)
             connectionCallbacks = MCConnectionCallbacks(
-                callbacks: connectionCompleteCallback,
+                connectionCompleteCallback: connectionCompleteCallback,
                 commissionerDeclarationCallback: commissionerDeclarationCallback
             )
         } else {
             identificationDeclarationOptions = MCIdentificationDeclarationOptions()
             targetAppInfo = MCTargetAppInfo(vendorId: kDesiredEndpointVendorId)
             connectionCallbacks = MCConnectionCallbacks(
-                callbacks: connectionCompleteCallback,
+                connectionCompleteCallback: connectionCompleteCallback,
                 commissionerDeclarationCallback: commissionerDeclarationCallback
             )
         }

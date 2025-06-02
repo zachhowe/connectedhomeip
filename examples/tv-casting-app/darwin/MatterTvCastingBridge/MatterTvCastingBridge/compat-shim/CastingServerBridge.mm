@@ -267,7 +267,7 @@ static const uint32_t kTargetPlayerDeviceType = 0x23;
         });
     };
 
-    MCConnectionCallbacks * connectionCallbacks = [[MCConnectionCallbacks alloc] initWithCallbacks:connectionCompletionBlock commissionerDeclarationCallback:nil];
+    MCConnectionCallbacks * connectionCallbacks = [[MCConnectionCallbacks alloc] initWithConnectionCompleteCallback:connectionCompletionBlock commissionerDeclarationCallback:nil];
 
     [commissioner.getCastingPlayer verifyOrEstablishConnectionWithCallbacks:connectionCallbacks identificationDeclarationOptions:identificationDeclarationOptions];
 

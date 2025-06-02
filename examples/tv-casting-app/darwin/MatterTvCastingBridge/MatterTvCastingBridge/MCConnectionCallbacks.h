@@ -19,6 +19,11 @@
 
 @class MCCommissionerDeclaration;
 
+NS_ASSUME_NONNULL_BEGIN
+
+typedef void(^MCConnectionCompleteCallback)(NSError * _Nullable);
+typedef void(^MCCommissionerDeclarationCallback)(MCCommissionerDeclaration *);
+
 /** @brief A container class for User Directed Commissioning (UDC) callbacks. */
 @interface MCConnectionCallbacks : NSObject
 
@@ -37,14 +42,14 @@
  *
  * @return A new instance of MCConnectionCallbacks.
  */
-- (instancetype _Nonnull)initWithCallbacks:(void (^_Nonnull)(NSError * _Nonnull))connectionCompleteCallback
-           commissionerDeclarationCallback:(void (^_Nullable)(MCCommissionerDeclaration * _Nonnull))commissionerDeclarationCallback;
+- (instancetype)initWithConnectionCompleteCallback:(MCConnectionCompleteCallback)connectionCompleteCallback
+                   commissionerDeclarationCallback:(nullable MCCommissionerDeclarationCallback)commissionerDeclarationCallback;
 
 /**
  * The callback called when the connection process has ended, regardless of whether it was
  * successful or not.
  */
-@property void (^_Nullable connectionCompleteCallback)(NSError * _Nonnull);
+@property (nonatomic, copy) MCConnectionCompleteCallback connectionCompleteCallback;
 
 /**
  * The callback called when the Client/Commissionee receives a CommissionerDeclaration
@@ -52,6 +57,8 @@
  * where a reply from the Commissioner is expected. It provides information indicating the
  * Commissioner’s pre-commissioning state.
  */
-@property void (^_Nullable commissionerDeclarationCallback)(MCCommissionerDeclaration * _Nonnull);
+@property (nonatomic, copy, nullable) MCCommissionerDeclarationCallback commissionerDeclarationCallback;
 
 @end
+
+NS_ASSUME_NONNULL_END
