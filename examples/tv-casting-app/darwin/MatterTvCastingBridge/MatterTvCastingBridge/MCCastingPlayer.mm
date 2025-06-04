@@ -48,28 +48,39 @@ static const NSInteger kMinCommissioningWindowTimeoutSec = matter::casting::core
     return kMinCommissioningWindowTimeoutSec;
 }
 
-- (NSError *)verifyOrEstablishConnectionWithCallbacks:(MCConnectionCallbacks * _Nonnull)connectionCallbacks
+- (BOOL)verifyOrEstablishConnectionWithCallbacks:(MCConnectionCallbacks * _Nonnull)connectionCallbacks
+                                                error:(NSError **)error
 {
     ChipLogProgress(AppServer, "MCCastingPlayer.verifyOrEstablishConnectionWithCallbacks() called, MCConnectionCallbacks parameter only");
     return [self verifyOrEstablishConnectionWithCallbacks:connectionCallbacks
                                                   timeout:kMinCommissioningWindowTimeoutSec
-                         identificationDeclarationOptions:nil];
+                         identificationDeclarationOptions:nil
+                                                    error:error];
 }
 
-- (NSError *)verifyOrEstablishConnectionWithCallbacks:(MCConnectionCallbacks * _Nonnull)connectionCallbacks
-                     identificationDeclarationOptions:(MCIdentificationDeclarationOptions * _Nullable)identificationDeclarationOptions
+- (BOOL)verifyOrEstablishConnectionWithCallbacks:(MCConnectionCallbacks * _Nonnull)connectionCallbacks
+                identificationDeclarationOptions:(MCIdentificationDeclarationOptions * _Nullable)identificationDeclarationOptions
+                                           error:(NSError **)error
 {
     ChipLogProgress(AppServer, "MCCastingPlayer.verifyOrEstablishConnectionWithCallbacks() called, MCConnectionCallbacks and MCIdentificationDeclarationOptions parameters");
     return [self verifyOrEstablishConnectionWithCallbacks:connectionCallbacks
                                                   timeout:kMinCommissioningWindowTimeoutSec
-                         identificationDeclarationOptions:identificationDeclarationOptions];
+                         identificationDeclarationOptions:identificationDeclarationOptions
+                                                    error:error];
 }
 
-- (NSError *)verifyOrEstablishConnectionWithCallbacks:(MCConnectionCallbacks * _Nonnull)connectionCallbacks
-                                              timeout:(long)timeout
-                     identificationDeclarationOptions:(MCIdentificationDeclarationOptions * _Nullable)identificationDeclarationOptions
+- (BOOL)verifyOrEstablishConnectionWithCallbacks:(MCConnectionCallbacks * _Nonnull)connectionCallbacks
+                                         timeout:(long)timeout
+                identificationDeclarationOptions:(MCIdentificationDeclarationOptions * _Nullable)identificationDeclarationOptions
+                                           error:(NSError **)error
 {
     ChipLogProgress(AppServer, "MCCastingPlayer.verifyOrEstablishConnectionWithCallbacks() called, MCConnectionCallbacks, timeout and MCIdentificationDeclarationOptions parameters");
+
+    if (![[MCCastingApp getSharedInstance] isRunning]) {
+        if (error) { *error = [MCErrorUtils NSErrorFromChipError:CHIP_ERROR_INCORRECT_STATE]; }
+        return NO;
+    }
+
     VerifyOrReturnValue([[MCCastingApp getSharedInstance] isRunning],
         [MCErrorUtils NSErrorFromChipError:CHIP_ERROR_INCORRECT_STATE],
         ChipLogError(AppServer, "MCCastingPlayer.verifyOrEstablishConnectionWithCallbacks() MCCastingApp NOT running"));
@@ -124,7 +135,7 @@ static const NSInteger kMinCommissioningWindowTimeoutSec = matter::casting::core
         ChipLogProgress(AppServer, "MCCastingPlayer.verifyOrEstablishConnectionWithCallbacks() calling cpp CastingPlayer.VerifyOrEstablishConnection()");
         _cppCastingPlayer->VerifyOrEstablishConnection(cppConnectionCallbacks, timeout, cppIdOptions);
     });
-    return nil;
+    return YES;
 }
 
 - (matter::casting::core::IdentificationDeclarationOptions)setupCppIdOptions:(MCIdentificationDeclarationOptions * _Nullable)identificationDeclarationOptions
@@ -138,15 +149,21 @@ static const NSInteger kMinCommissioningWindowTimeoutSec = matter::casting::core
     return cppIdOptions;
 }
 
-- (NSError *)continueConnecting
+- (BOOL)continueConnecting:(NSError **)error
 {
     ChipLogProgress(AppServer, "MCCastingPlayer.continueConnecting() called");
-    VerifyOrReturnValue([[MCCastingApp getSharedInstance] isRunning], [MCErrorUtils NSErrorFromChipError:CHIP_ERROR_INCORRECT_STATE],
-        ChipLogError(AppServer, "MCCastingPlayer.continueConnecting() MCCastingApp NOT running"));
+    if (![[MCCastingApp getSharedInstance] isRunning]) {
+        if (error) { *error = [MCErrorUtils NSErrorFromChipError:CHIP_ERROR_INCORRECT_STATE]; }
+        return NO;
+    }
 
     ChipLogProgress(AppServer, "MCCastingPlayer.continueConnecting() calling MCCastingApp.updateCommissionableDataProvider()");
     NSError * updateError = [[MCCastingApp getSharedInstance] updateCommissionableDataProvider];
-    VerifyOrReturnValue(updateError == nil, updateError, ChipLogError(AppServer, "MCCastingPlayer.continueConnecting() call to updateCommissionableDataProvider() failed with error: %@", updateError));
+    if (updateError == nil) {
+        if (error) { *error = updateError; }
+        ChipLogError(AppServer, "MCCastingPlayer.continueConnecting() call to updateCommissionableDataProvider() failed with error: %@", updateError);
+        return NO;
+    }
 
     __block CHIP_ERROR err = CHIP_NO_ERROR;
     dispatch_queue_t workQueue = [[MCCastingApp getSharedInstance] getWorkQueue];
@@ -158,13 +175,17 @@ static const NSInteger kMinCommissioningWindowTimeoutSec = matter::casting::core
             err.Format());
         return [MCErrorUtils NSErrorFromChipError:err];
     }
-    return nil;
+    return YES;
 }
 
-- (NSError *)stopConnecting
+- (BOOL)stopConnecting:(NSError **)error
 {
     ChipLogProgress(AppServer, "MCCastingPlayer.stopConnecting() called");
-    VerifyOrReturnValue([[MCCastingApp getSharedInstance] isRunning], [MCErrorUtils NSErrorFromChipError:CHIP_ERROR_INCORRECT_STATE], ChipLogError(AppServer, "MCCastingPlayer.stopConnecting() MCCastingApp NOT running"));
+
+    if (![[MCCastingApp getSharedInstance] isRunning]) {
+        if (error) { *error = [MCErrorUtils NSErrorFromChipError:CHIP_ERROR_INCORRECT_STATE]; }
+        return NO;
+    }
 
     __block CHIP_ERROR err = CHIP_NO_ERROR;
     dispatch_queue_t workQueue = [[MCCastingApp getSharedInstance] getWorkQueue];
@@ -176,7 +197,7 @@ static const NSInteger kMinCommissioningWindowTimeoutSec = matter::casting::core
             err.Format());
         return [MCErrorUtils NSErrorFromChipError:err];
     }
-    return nil;
+    return YES;
 }
 
 - (void)disconnect

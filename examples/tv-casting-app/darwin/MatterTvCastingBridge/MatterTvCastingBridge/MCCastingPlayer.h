@@ -69,9 +69,10 @@ typedef NS_ENUM(NSUInteger, MCCastingPlayerConnectionState) {
  *     the on-device cached information/CastingStore.
  * @return nil if request submitted successfully, otherwise a NSError object corresponding to the error.
  */
-- (NSError * _Nullable)verifyOrEstablishConnectionWithCallbacks:(MCConnectionCallbacks * _Nonnull)connectionCallbacks
-                                                        timeout:(long)timeout
-                               identificationDeclarationOptions:(MCIdentificationDeclarationOptions * _Nullable)identificationDeclarationOptions;
+- (BOOL)verifyOrEstablishConnectionWithCallbacks:(MCConnectionCallbacks * _Nonnull)connectionCallbacks
+                                         timeout:(long)timeout
+                identificationDeclarationOptions:(MCIdentificationDeclarationOptions * _Nullable)identificationDeclarationOptions
+                                           error:(NSError * _Nullable * _Nullable)error;
 
 /**
  * @brief Verifies that a connection exists with this CastingPlayer, or triggers a new
@@ -94,8 +95,9 @@ typedef NS_ENUM(NSUInteger, MCCastingPlayerConnectionState) {
  * @return nil if request submitted successfully, otherwise a NSError object corresponding to the error.
  * @see verifyOrEstablishConnectionWithCallbacks:timeout:identificationDeclarationOptions:
  */
-- (NSError * _Nullable)verifyOrEstablishConnectionWithCallbacks:(MCConnectionCallbacks * _Nonnull)connectionCallbacks
-                               identificationDeclarationOptions:(MCIdentificationDeclarationOptions * _Nullable)identificationDeclarationOptions;
+- (BOOL)verifyOrEstablishConnectionWithCallbacks:(MCConnectionCallbacks * _Nonnull)connectionCallbacks
+                identificationDeclarationOptions:(MCIdentificationDeclarationOptions * _Nullable)identificationDeclarationOptions
+                                           error:(NSError * _Nullable * _Nullable)error;
 
 /**
  * @brief Verifies that a connection exists with this CastingPlayer, or triggers a new
@@ -108,7 +110,8 @@ typedef NS_ENUM(NSUInteger, MCCastingPlayerConnectionState) {
  * @return nil if request submitted successfully, otherwise a NSError object corresponding to the error.
  * @see verifyOrEstablishConnectionWithCallbacks:timeout:identificationDeclarationOptions:
  */
-- (NSError * _Nullable)verifyOrEstablishConnectionWithCallbacks:(MCConnectionCallbacks * _Nonnull)connectionCallbacks;
+- (BOOL)verifyOrEstablishConnectionWithCallbacks:(MCConnectionCallbacks * _Nonnull)connectionCallbacks
+                                           error:(NSError * _Nullable * _Nullable)error;
 
 /**
  * @brief This is a continuation of the CastingPlayer/Commissioner-Generated passcode
@@ -132,7 +135,7 @@ typedef NS_ENUM(NSUInteger, MCCastingPlayerConnectionState) {
  *     into verifyOrEstablishConnection() will be used.
  * @return nil if request submitted successfully, otherwise a NSError object corresponding to the error.
  */
-- (NSError * _Nullable)continueConnecting;
+- (BOOL)continueConnecting:(NSError * _Nonnull * _Nullable)error;
 
 /**
  * @brief This cancels the CastingPlayer/Commissioner-Generated passcode commissioning flow
@@ -146,7 +149,7 @@ typedef NS_ENUM(NSUInteger, MCCastingPlayerConnectionState) {
  *     VerifyOrEstablishConnection() API above since no connection is established.
  * @return nil if request submitted successfully, otherwise a NSError object corresponding to the error.
  */
-- (NSError * _Nullable)stopConnecting;
+- (BOOL)stopConnecting:(NSError * _Nonnull * _Nullable)error;
 
 /**
  * @brief Sets the internal connection state of this MCCastingPlayer to "disconnected"

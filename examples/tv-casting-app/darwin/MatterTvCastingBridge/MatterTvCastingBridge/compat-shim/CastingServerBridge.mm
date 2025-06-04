@@ -269,7 +269,7 @@ static const uint32_t kTargetPlayerDeviceType = 0x23;
 
     MCConnectionCallbacks * connectionCallbacks = [[MCConnectionCallbacks alloc] initWithConnectionCompleteCallback:connectionCompletionBlock commissionerDeclarationCallback:nil];
 
-    [commissioner.getCastingPlayer verifyOrEstablishConnectionWithCallbacks:connectionCallbacks identificationDeclarationOptions:identificationDeclarationOptions];
+    [commissioner.getCastingPlayer verifyOrEstablishConnectionWithCallbacks:connectionCallbacks identificationDeclarationOptions:identificationDeclarationOptions error:nil];
 
     dispatch_async(clientQueue, ^{
         udcRequestSentHandler(MATTER_NO_ERROR);

@@ -51,11 +51,12 @@ class MCConnectionExampleViewModel: ObservableObject {
 
                 if connectionState == .connecting {
                     self.Log.info("MCConnectionExampleViewModel cancelConnect(). User navigating back from ConnectionView")
-                    let err = selectedCastingPlayer?.stopConnecting()
-                    if err == nil {
+
+                    do {
+                        try selectedCastingPlayer?.stopConnecting()
                         self.connectionStatus = "User cancelled the connection attempt with CastingPlayer.stopConnecting()."
                         self.Log.info("MCConnectionExampleViewModel cancelConnect() MCCastingPlayer.stopConnecting() succeeded.")
-                    } else {
+                    } catch let err {
                         self.connectionStatus = "Cancel connection failed due to: \(String(describing: err))."
                         self.Log.error("MCConnectionExampleViewModel cancelConnect() MCCastingPlayer.stopConnecting() failed due to: \(err)")
                     }
@@ -139,10 +140,10 @@ class MCConnectionExampleViewModel: ObservableObject {
                             }
 
                             self.Log.info("MCConnectionExampleViewModel connect() commissionerDeclarationCallback, calling MCCastingPlayer.continueConnecting()")
-                            let errContinue = selectedCastingPlayer?.continueConnecting()
-                            if errContinue == nil {
+                            do {
+                                try selectedCastingPlayer?.continueConnecting()
                                 self.connectionStatus = "Continuing to connect with user entered passcode: \(userEnteredPasscode)"
-                            } else {
+                            } catch let errContinue {
                                 self.connectionStatus = "Continue Connecting to Casting Player failed with: \(String(describing: errContinue)) \n\nRoute back to disconnect and try again."
                                 self.Log.error("MCConnectionExampleViewModel connect() commissionerDeclarationCallback, MCCastingPlayer.continueConnecting() failed due to: \(errContinue)")
                             }
@@ -180,8 +181,9 @@ class MCConnectionExampleViewModel: ObservableObject {
         self.Log.info("MCConnectionExampleViewModel.connect() MCIdentificationDeclarationOptions description: \n\(identificationDeclarationOptions.description)")
 
         self.Log.info("MCConnectionExampleViewModel.connect() calling MCCastingPlayer.verifyOrEstablishConnection()")
-        let err = selectedCastingPlayer?.verifyOrEstablishConnection(with: connectionCallbacks, identificationDeclarationOptions: identificationDeclarationOptions)
-        if err != nil {
+        do {
+            try selectedCastingPlayer?.verifyOrEstablishConnection(with: connectionCallbacks, identificationDeclarationOptions: identificationDeclarationOptions)
+        } catch let err {
             self.Log.error("MCConnectionExampleViewModel connect(), MCCastingPlayer.verifyOrEstablishConnection() failed due to: \(err)")
         }
     }
