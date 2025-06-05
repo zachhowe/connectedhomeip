@@ -78,7 +78,7 @@ class MCDiscoveryExampleViewModel: ObservableObject {
             return
         }
         
-        self.Log.info("didAddDiscoveredCastingPlayers notified of a MCCastingPlayer with ID: \(castingPlayer.identifier())")
+        self.Log.info("didAddDiscoveredCastingPlayers notified of a MCCastingPlayer with ID: \(castingPlayer.identifier)")
 
         DispatchQueue.main.async
         {
@@ -96,7 +96,7 @@ class MCDiscoveryExampleViewModel: ObservableObject {
             return
         }
         
-        self.Log.info("didRemoveDiscoveredCastingPlayers notified of a MCCastingPlayer with ID: \(castingPlayer.identifier())")
+        self.Log.info("didRemoveDiscoveredCastingPlayers notified of a MCCastingPlayer with ID: \(castingPlayer.identifier)")
         DispatchQueue.main.async
         {
             self.displayedCastingPlayers.removeAll(where: {$0 == castingPlayer})
@@ -113,8 +113,8 @@ class MCDiscoveryExampleViewModel: ObservableObject {
             return
         }
         
-        self.Log.info("didUpdateDiscoveredCastingPlayers notified of a MCCastingPlayer with ID: \(castingPlayer.identifier())")
-        if let index = displayedCastingPlayers.firstIndex(where: { castingPlayer.identifier() == $0.identifier() })
+        self.Log.info("didUpdateDiscoveredCastingPlayers notified of a MCCastingPlayer with ID: \(castingPlayer.identifier)")
+        if let index = displayedCastingPlayers.firstIndex(where: { castingPlayer.identifier == $0.identifier })
         {
             DispatchQueue.main.async
             {

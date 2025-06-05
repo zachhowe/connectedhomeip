@@ -25,10 +25,10 @@ class MCEndpointSelector {
     static func selectEndpoint(from castingPlayer: MCCastingPlayer, sampleEndpointVid: Int) -> MCEndpoint? {
         Log.info("MCEndpointSelector.selectEndpoint()")
         
-        if let endpoint = castingPlayer.endpoints().filter({ $0.vendorId().intValue == sampleEndpointVid }).first {
+        if let endpoint = castingPlayer.endpoints.filter({ $0.vendorId.intValue == sampleEndpointVid }).first {
             Log.info("MCEndpointSelector.selectEndpoint() Found endpoint matching the sampleEndpointVid: \(sampleEndpointVid)")
             return endpoint
-        } else if let endpoint = castingPlayer.endpoints().filter({ $0.identifier().intValue == 1 }).first {
+        } else if let endpoint = castingPlayer.endpoints.filter({ $0.identifier.intValue == 1 }).first {
             Log.info("MCEndpointSelector.selectEndpoint() No endpoint matching the sampleEndpointVid: \(sampleEndpointVid), but found endpoint with identifier: 1")
             return endpoint
         }

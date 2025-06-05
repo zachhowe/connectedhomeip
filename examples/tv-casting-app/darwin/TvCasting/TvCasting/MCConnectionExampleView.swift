@@ -36,13 +36,13 @@ struct MCConnectionExampleView: View {
     var body: some View {
         VStack(alignment: .leading) {
             if self.useCommissionerGeneratedPasscode {
-                if selectedCastingPlayer?.supportsCommissionerGeneratedPasscode() == true {
-                    Text("Verifying or Establishing Connection, using Casting Player/Commissioner-Generated passcode, with Casting Player: \(self.selectedCastingPlayer!.deviceName())\n\nEnter the passcode displayed on the Casting Player when prompted.").padding()
+                if selectedCastingPlayer?.supportsCommissionerGeneratedPasscode == true {
+                    Text("Verifying or Establishing Connection, using Casting Player/Commissioner-Generated passcode, with Casting Player: \(self.selectedCastingPlayer!.deviceName)\n\nEnter the passcode displayed on the Casting Player when prompted.").padding()
                 } else {
-                    Text("\(self.selectedCastingPlayer!.deviceName()) does not support Casting Player/Commissioner-Generated passcode commissioning. \n\nSelect a different Casting Player.").padding()
+                    Text("\(self.selectedCastingPlayer!.deviceName) does not support Casting Player/Commissioner-Generated passcode commissioning. \n\nSelect a different Casting Player.").padding()
                 }
             } else {
-                Text("Verifying or Establishing Connection to Casting Player: \(self.selectedCastingPlayer!.deviceName())").padding()
+                Text("Verifying or Establishing Connection to Casting Player: \(self.selectedCastingPlayer!.deviceName)").padding()
             }
             if let connectionSuccess = viewModel.connectionSuccess
             {
@@ -78,11 +78,11 @@ struct MCConnectionExampleView: View {
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .top)
         .onAppear(perform: {
             if self.useCommissionerGeneratedPasscode {
-                if selectedCastingPlayer?.supportsCommissionerGeneratedPasscode() == true {
+                if selectedCastingPlayer?.supportsCommissionerGeneratedPasscode == true {
                     self.Log.info("MCConnectionExampleView calling MCConnectionExampleViewModel.connect() with useCommissionerGeneratedPasscode: \(String(describing: self.useCommissionerGeneratedPasscode))")
                     viewModel.connect(selectedCastingPlayer: self.selectedCastingPlayer, useCommissionerGeneratedPasscode: self.useCommissionerGeneratedPasscode)
                 } else {
-                    self.Log.error("MCConnectionExampleView \(self.selectedCastingPlayer!.deviceName()) does not support Casting Player/Commissioner-Generated passcode commissioning. Select a different Casting Player.")
+                    self.Log.error("MCConnectionExampleView \(self.selectedCastingPlayer!.deviceName) does not support Casting Player/Commissioner-Generated passcode commissioning. Select a different Casting Player.")
                 }
             } else {
                 self.Log.info("MCConnectionExampleView calling MCConnectionExampleViewModel.connect() with useCommissionerGeneratedPasscode: \(String(describing: self.useCommissionerGeneratedPasscode))")

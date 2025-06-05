@@ -163,21 +163,21 @@ typedef NS_ENUM(NSUInteger, MCCastingPlayerConnectionState) {
  */
 - (BOOL)getConnectionState:(MCCastingPlayerConnectionState * _Nonnull)state error:(NSError * _Nonnull * _Nullable)error;
 
-- (NSString * _Nonnull)identifier;
-- (NSString * _Nonnull)deviceName;
-- (uint16_t)vendorId;
-- (uint16_t)productId;
-- (uint32_t)deviceType;
-- (bool)supportsCommissionerGeneratedPasscode;
-- (NSArray<NSString *> * _Nonnull)ipAddresses;
+@property (nonatomic, readonly, copy, nonnull) NSString* identifier;
+@property (nonatomic, readonly, copy, nonnull) NSString* deviceName;
+@property (nonatomic, readonly) uint16_t vendorId;
+@property (nonatomic, readonly) uint16_t productId;
+@property (nonatomic, readonly) uint32_t deviceType;
+@property (nonatomic, readonly) bool supportsCommissionerGeneratedPasscode;
+@property (nonatomic, readonly, copy, nonnull) NSArray<NSString *> * ipAddresses;
 @property (nonatomic, readonly) uint16_t port;
-- (NSString * _Nonnull)hostName;
-- (NSString * _Nonnull)instanceName;
+@property (nonatomic, readonly, copy, nonnull) NSString* hostName;
+@property (nonatomic, readonly, copy, nonnull) NSString* instanceName;
 
 /**
  * @brief Returns the NSArray of MCEndpoints associated with this MCCastingPlayer
  */
-- (NSArray<MCEndpoint *> * _Nonnull)endpoints;
+@property (nonatomic, readonly, copy, nonnull) NSArray<MCEndpoint *> * endpoints;
 - (void)logAllEndpoints;
 
 - (nonnull instancetype)init UNAVAILABLE_ATTRIBUTE;

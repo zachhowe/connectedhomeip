@@ -25,11 +25,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MCEndpoint : NSObject
 
-- (NSNumber *)identifier;
-- (NSNumber *)vendorId;
-- (NSNumber *)productId;
+
+@property (nonatomic, readonly, copy) NSNumber * identifier;
+@property (nonatomic, readonly, copy) NSNumber * vendorId;
+@property (nonatomic, readonly, copy) NSNumber * productId;
+
 - (NSArray *)deviceTypeList;
-- (MCCastingPlayer *)castingPlayer;
+@property (nonatomic, readonly) MCCastingPlayer * castingPlayer;
 
 - (instancetype)init UNAVAILABLE_ATTRIBUTE;
 + (instancetype)new UNAVAILABLE_ATTRIBUTE;

@@ -20,7 +20,7 @@ import MatterTvCastingBridge
 
 extension MCCastingPlayer: @retroactive Identifiable {
     public var id: String {
-        identifier()
+        identifier
     }
 }
 
