@@ -63938,8 +63938,7 @@ public:
 | * JoinGroup                                                         |   0x00 |
 | * LeaveGroup                                                        |   0x01 |
 | * UpdateGroupKey                                                    |   0x03 |
-| * ExpireGracePeriod                                                 |   0x04 |
-| * ConfigureAuxiliaryACL                                             |   0x05 |
+| * ConfigureAuxiliaryACL                                             |   0x04 |
 |------------------------------------------------------------------------------|
 | Attributes:                                                         |        |
 | * Membership                                                        | 0x0000 |
@@ -63970,16 +63969,16 @@ public:
         AddArgument("Endpoints", &mComplex_Endpoints);
 #endif // MTR_ENABLE_PROVISIONAL
 #if MTR_ENABLE_PROVISIONAL
-        AddArgument("KeyID", 0, UINT32_MAX, &mRequest.keyID);
+        AddArgument("KeySetID", 0, UINT16_MAX, &mRequest.keySetID);
 #endif // MTR_ENABLE_PROVISIONAL
 #if MTR_ENABLE_PROVISIONAL
         AddArgument("Key", &mRequest.key);
 #endif // MTR_ENABLE_PROVISIONAL
 #if MTR_ENABLE_PROVISIONAL
-        AddArgument("GracePeriod", 0, UINT32_MAX, &mRequest.gracePeriod);
+        AddArgument("UseAuxiliaryACL", 0, 1, &mRequest.useAuxiliaryACL);
 #endif // MTR_ENABLE_PROVISIONAL
 #if MTR_ENABLE_PROVISIONAL
-        AddArgument("UseAuxiliaryACL", 0, 1, &mRequest.useAuxiliaryACL);
+        AddArgument("ReplaceEndpoints", 0, 1, &mRequest.replaceEndpoints);
 #endif // MTR_ENABLE_PROVISIONAL
         ClusterCommand::AddArguments();
     }
@@ -64010,7 +64009,7 @@ public:
         }
 #endif // MTR_ENABLE_PROVISIONAL
 #if MTR_ENABLE_PROVISIONAL
-        params.keyID = [NSNumber numberWithUnsignedInt:mRequest.keyID];
+        params.keySetID = [NSNumber numberWithUnsignedShort:mRequest.keySetID];
 #endif // MTR_ENABLE_PROVISIONAL
 #if MTR_ENABLE_PROVISIONAL
         if (mRequest.key.HasValue()) {
@@ -64020,17 +64019,17 @@ public:
         }
 #endif // MTR_ENABLE_PROVISIONAL
 #if MTR_ENABLE_PROVISIONAL
-        if (mRequest.gracePeriod.HasValue()) {
-            params.gracePeriod = [NSNumber numberWithUnsignedInt:mRequest.gracePeriod.Value()];
-        } else {
-            params.gracePeriod = nil;
-        }
-#endif // MTR_ENABLE_PROVISIONAL
-#if MTR_ENABLE_PROVISIONAL
         if (mRequest.useAuxiliaryACL.HasValue()) {
             params.useAuxiliaryACL = [NSNumber numberWithBool:mRequest.useAuxiliaryACL.Value()];
         } else {
             params.useAuxiliaryACL = nil;
+        }
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        if (mRequest.replaceEndpoints.HasValue()) {
+            params.replaceEndpoints = [NSNumber numberWithBool:mRequest.replaceEndpoints.Value()];
+        } else {
+            params.replaceEndpoints = nil;
         }
 #endif // MTR_ENABLE_PROVISIONAL
         uint16_t repeatCount = mRepeatCount.ValueOr(1);
@@ -64150,13 +64149,10 @@ public:
         AddArgument("GroupID", 0, UINT16_MAX, &mRequest.groupID);
 #endif // MTR_ENABLE_PROVISIONAL
 #if MTR_ENABLE_PROVISIONAL
-        AddArgument("KeyID", 0, UINT32_MAX, &mRequest.keyID);
+        AddArgument("KeySetID", 0, UINT16_MAX, &mRequest.keySetID);
 #endif // MTR_ENABLE_PROVISIONAL
 #if MTR_ENABLE_PROVISIONAL
         AddArgument("Key", &mRequest.key);
-#endif // MTR_ENABLE_PROVISIONAL
-#if MTR_ENABLE_PROVISIONAL
-        AddArgument("GracePeriod", 0, UINT32_MAX, &mRequest.gracePeriod);
 #endif // MTR_ENABLE_PROVISIONAL
         ClusterCommand::AddArguments();
     }
@@ -64176,20 +64172,13 @@ public:
         params.groupID = [NSNumber numberWithUnsignedShort:mRequest.groupID];
 #endif // MTR_ENABLE_PROVISIONAL
 #if MTR_ENABLE_PROVISIONAL
-        params.keyID = [NSNumber numberWithUnsignedInt:mRequest.keyID];
+        params.keySetID = [NSNumber numberWithUnsignedShort:mRequest.keySetID];
 #endif // MTR_ENABLE_PROVISIONAL
 #if MTR_ENABLE_PROVISIONAL
         if (mRequest.key.HasValue()) {
             params.key = [NSData dataWithBytes:mRequest.key.Value().data() length:mRequest.key.Value().size()];
         } else {
             params.key = nil;
-        }
-#endif // MTR_ENABLE_PROVISIONAL
-#if MTR_ENABLE_PROVISIONAL
-        if (mRequest.gracePeriod.HasValue()) {
-            params.gracePeriod = [NSNumber numberWithUnsignedInt:mRequest.gracePeriod.Value()];
-        } else {
-            params.gracePeriod = nil;
         }
 #endif // MTR_ENABLE_PROVISIONAL
         uint16_t repeatCount = mRepeatCount.ValueOr(1);
@@ -64213,59 +64202,6 @@ public:
 
 private:
     chip::app::Clusters::Groupcast::Commands::UpdateGroupKey::Type mRequest;
-};
-
-#endif // MTR_ENABLE_PROVISIONAL
-#if MTR_ENABLE_PROVISIONAL
-/*
- * Command ExpireGracePeriod
- */
-class GroupcastExpireGracePeriod : public ClusterCommand {
-public:
-    GroupcastExpireGracePeriod()
-        : ClusterCommand("expire-grace-period")
-    {
-#if MTR_ENABLE_PROVISIONAL
-        AddArgument("GroupID", 0, UINT16_MAX, &mRequest.groupID);
-#endif // MTR_ENABLE_PROVISIONAL
-        ClusterCommand::AddArguments();
-    }
-
-    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
-    {
-        constexpr chip::ClusterId clusterId = chip::app::Clusters::Groupcast::Id;
-        constexpr chip::CommandId commandId = chip::app::Clusters::Groupcast::Commands::ExpireGracePeriod::Id;
-
-        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
-
-        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
-        __auto_type * cluster = [[MTRBaseClusterGroupcast alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
-        __auto_type * params = [[MTRGroupcastClusterExpireGracePeriodParams alloc] init];
-        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
-#if MTR_ENABLE_PROVISIONAL
-        params.groupID = [NSNumber numberWithUnsignedShort:mRequest.groupID];
-#endif // MTR_ENABLE_PROVISIONAL
-        uint16_t repeatCount = mRepeatCount.ValueOr(1);
-        uint16_t __block responsesNeeded = repeatCount;
-        while (repeatCount--) {
-            [cluster expireGracePeriodWithParams:params completion:
-                    ^(NSError * _Nullable error) {
-                        responsesNeeded--;
-                        if (error != nil) {
-                            mError = error;
-                            LogNSError("Error", error);
-                            TEMPORARY_RETURN_IGNORED RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
-                        }
-                        if (responsesNeeded == 0) {
-                            SetCommandExitStatus(mError);
-                        }
-                    }];
-        }
-        return CHIP_NO_ERROR;
-    }
-
-private:
-    chip::app::Clusters::Groupcast::Commands::ExpireGracePeriod::Type mRequest;
 };
 
 #endif // MTR_ENABLE_PROVISIONAL
@@ -138481,13 +138417,10 @@ public:
 | * AmbientContextType                                                | 0x0003 |
 | * AmbientContextTypeSupported                                       | 0x0004 |
 | * SimultaneousDetectionLimit                                        | 0x0005 |
-| * CountThresholdReached                                             | 0x0006 |
-| * CountThreshold                                                    | 0x0007 |
-| * ObjectCount                                                       | 0x0008 |
-| * HoldTime                                                          | 0x0009 |
-| * HoldTimeLimits                                                    | 0x000A |
-| * PredictedActivity                                                 | 0x000B |
-| * PrivacyModeEnabled                                                | 0x000C |
+| * ObjectCountReached                                                | 0x0006 |
+| * HoldTime                                                          | 0x0007 |
+| * HoldTimeLimits                                                    | 0x0008 |
+| * PredictedActivity                                                 | 0x0009 |
 | * GeneratedCommandList                                              | 0xFFF8 |
 | * AcceptedCommandList                                               | 0xFFF9 |
 | * AttributeList                                                     | 0xFFFB |
@@ -138495,6 +138428,7 @@ public:
 | * ClusterRevision                                                   | 0xFFFD |
 |------------------------------------------------------------------------------|
 | Events:                                                             |        |
+| * AmbientContextDetected                                            | 0x0000 |
 \*----------------------------------------------------------------------------*/
 
 #if MTR_ENABLE_PROVISIONAL
@@ -139051,34 +138985,34 @@ public:
 #if MTR_ENABLE_PROVISIONAL
 
 /*
- * Attribute CountThresholdReached
+ * Attribute ObjectCountReached
  */
-class ReadAmbientContextSensingCountThresholdReached : public ReadAttribute {
+class ReadAmbientContextSensingObjectCountReached : public ReadAttribute {
 public:
-    ReadAmbientContextSensingCountThresholdReached()
-        : ReadAttribute("count-threshold-reached")
+    ReadAmbientContextSensingObjectCountReached()
+        : ReadAttribute("object-count-reached")
     {
     }
 
-    ~ReadAmbientContextSensingCountThresholdReached()
+    ~ReadAmbientContextSensingObjectCountReached()
     {
     }
 
     CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
     {
         constexpr chip::ClusterId clusterId = chip::app::Clusters::AmbientContextSensing::Id;
-        constexpr chip::AttributeId attributeId = chip::app::Clusters::AmbientContextSensing::Attributes::CountThresholdReached::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::AmbientContextSensing::Attributes::ObjectCountReached::Id;
 
         ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
 
         dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
         __auto_type * cluster = [[MTRBaseClusterAmbientContextSensing alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
-        [cluster readAttributeCountThresholdReachedWithCompletion:^(NSNumber * _Nullable value, NSError * _Nullable error) {
-            NSLog(@"AmbientContextSensing.CountThresholdReached response %@", [value description]);
+        [cluster readAttributeObjectCountReachedWithCompletion:^(NSNumber * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"AmbientContextSensing.ObjectCountReached response %@", [value description]);
             if (error == nil) {
                 TEMPORARY_RETURN_IGNORED RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
             } else {
-                LogNSError("AmbientContextSensing CountThresholdReached read Error", error);
+                LogNSError("AmbientContextSensing ObjectCountReached read Error", error);
                 TEMPORARY_RETURN_IGNORED RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
             }
             SetCommandExitStatus(error);
@@ -139087,21 +139021,21 @@ public:
     }
 };
 
-class SubscribeAttributeAmbientContextSensingCountThresholdReached : public SubscribeAttribute {
+class SubscribeAttributeAmbientContextSensingObjectCountReached : public SubscribeAttribute {
 public:
-    SubscribeAttributeAmbientContextSensingCountThresholdReached()
-        : SubscribeAttribute("count-threshold-reached")
+    SubscribeAttributeAmbientContextSensingObjectCountReached()
+        : SubscribeAttribute("object-count-reached")
     {
     }
 
-    ~SubscribeAttributeAmbientContextSensingCountThresholdReached()
+    ~SubscribeAttributeAmbientContextSensingObjectCountReached()
     {
     }
 
     CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
     {
         constexpr chip::ClusterId clusterId = chip::app::Clusters::AmbientContextSensing::Id;
-        constexpr chip::CommandId attributeId = chip::app::Clusters::AmbientContextSensing::Attributes::CountThresholdReached::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::AmbientContextSensing::Attributes::ObjectCountReached::Id;
 
         ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
         dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
@@ -139116,221 +139050,10 @@ public:
         if (mAutoResubscribe.HasValue()) {
             params.resubscribeAutomatically = mAutoResubscribe.Value();
         }
-        [cluster subscribeAttributeCountThresholdReachedWithParams:params
+        [cluster subscribeAttributeObjectCountReachedWithParams:params
             subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
             reportHandler:^(NSNumber * _Nullable value, NSError * _Nullable error) {
-                NSLog(@"AmbientContextSensing.CountThresholdReached response %@", [value description]);
-                if (error == nil) {
-                    TEMPORARY_RETURN_IGNORED RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
-                } else {
-                    TEMPORARY_RETURN_IGNORED RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
-                }
-                SetCommandExitStatus(error);
-            }];
-
-        return CHIP_NO_ERROR;
-    }
-};
-
-#endif // MTR_ENABLE_PROVISIONAL
-#if MTR_ENABLE_PROVISIONAL
-
-/*
- * Attribute CountThreshold
- */
-class ReadAmbientContextSensingCountThreshold : public ReadAttribute {
-public:
-    ReadAmbientContextSensingCountThreshold()
-        : ReadAttribute("count-threshold")
-    {
-    }
-
-    ~ReadAmbientContextSensingCountThreshold()
-    {
-    }
-
-    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
-    {
-        constexpr chip::ClusterId clusterId = chip::app::Clusters::AmbientContextSensing::Id;
-        constexpr chip::AttributeId attributeId = chip::app::Clusters::AmbientContextSensing::Attributes::CountThreshold::Id;
-
-        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
-
-        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
-        __auto_type * cluster = [[MTRBaseClusterAmbientContextSensing alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
-        [cluster readAttributeCountThresholdWithCompletion:^(NSNumber * _Nullable value, NSError * _Nullable error) {
-            NSLog(@"AmbientContextSensing.CountThreshold response %@", [value description]);
-            if (error == nil) {
-                TEMPORARY_RETURN_IGNORED RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
-            } else {
-                LogNSError("AmbientContextSensing CountThreshold read Error", error);
-                TEMPORARY_RETURN_IGNORED RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
-            }
-            SetCommandExitStatus(error);
-        }];
-        return CHIP_NO_ERROR;
-    }
-};
-
-class WriteAmbientContextSensingCountThreshold : public WriteAttribute {
-public:
-    WriteAmbientContextSensingCountThreshold()
-        : WriteAttribute("count-threshold")
-    {
-        AddArgument("attr-name", "count-threshold");
-        AddArgument("attr-value", 0, UINT16_MAX, &mValue);
-        WriteAttribute::AddArguments();
-    }
-
-    ~WriteAmbientContextSensingCountThreshold()
-    {
-    }
-
-    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
-    {
-        constexpr chip::ClusterId clusterId = chip::app::Clusters::AmbientContextSensing::Id;
-        constexpr chip::AttributeId attributeId = chip::app::Clusters::AmbientContextSensing::Attributes::CountThreshold::Id;
-
-        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") WriteAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
-        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
-        __auto_type * cluster = [[MTRBaseClusterAmbientContextSensing alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
-        __auto_type * params = [[MTRWriteParams alloc] init];
-        params.timedWriteTimeout = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
-        params.dataVersion = mDataVersion.HasValue() ? [NSNumber numberWithUnsignedInt:mDataVersion.Value()] : nil;
-        NSNumber * _Nonnull value = [NSNumber numberWithUnsignedShort:mValue];
-
-        [cluster writeAttributeCountThresholdWithValue:value params:params completion:^(NSError * _Nullable error) {
-            if (error != nil) {
-                LogNSError("AmbientContextSensing CountThreshold write Error", error);
-                TEMPORARY_RETURN_IGNORED RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
-            }
-            SetCommandExitStatus(error);
-        }];
-        return CHIP_NO_ERROR;
-    }
-
-private:
-    uint16_t mValue;
-};
-
-class SubscribeAttributeAmbientContextSensingCountThreshold : public SubscribeAttribute {
-public:
-    SubscribeAttributeAmbientContextSensingCountThreshold()
-        : SubscribeAttribute("count-threshold")
-    {
-    }
-
-    ~SubscribeAttributeAmbientContextSensingCountThreshold()
-    {
-    }
-
-    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
-    {
-        constexpr chip::ClusterId clusterId = chip::app::Clusters::AmbientContextSensing::Id;
-        constexpr chip::CommandId attributeId = chip::app::Clusters::AmbientContextSensing::Attributes::CountThreshold::Id;
-
-        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
-        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
-        __auto_type * cluster = [[MTRBaseClusterAmbientContextSensing alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
-        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
-        if (mKeepSubscriptions.HasValue()) {
-            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
-        }
-        if (mFabricFiltered.HasValue()) {
-            params.filterByFabric = mFabricFiltered.Value();
-        }
-        if (mAutoResubscribe.HasValue()) {
-            params.resubscribeAutomatically = mAutoResubscribe.Value();
-        }
-        [cluster subscribeAttributeCountThresholdWithParams:params
-            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
-            reportHandler:^(NSNumber * _Nullable value, NSError * _Nullable error) {
-                NSLog(@"AmbientContextSensing.CountThreshold response %@", [value description]);
-                if (error == nil) {
-                    TEMPORARY_RETURN_IGNORED RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
-                } else {
-                    TEMPORARY_RETURN_IGNORED RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
-                }
-                SetCommandExitStatus(error);
-            }];
-
-        return CHIP_NO_ERROR;
-    }
-};
-
-#endif // MTR_ENABLE_PROVISIONAL
-#if MTR_ENABLE_PROVISIONAL
-
-/*
- * Attribute ObjectCount
- */
-class ReadAmbientContextSensingObjectCount : public ReadAttribute {
-public:
-    ReadAmbientContextSensingObjectCount()
-        : ReadAttribute("object-count")
-    {
-    }
-
-    ~ReadAmbientContextSensingObjectCount()
-    {
-    }
-
-    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
-    {
-        constexpr chip::ClusterId clusterId = chip::app::Clusters::AmbientContextSensing::Id;
-        constexpr chip::AttributeId attributeId = chip::app::Clusters::AmbientContextSensing::Attributes::ObjectCount::Id;
-
-        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
-
-        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
-        __auto_type * cluster = [[MTRBaseClusterAmbientContextSensing alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
-        [cluster readAttributeObjectCountWithCompletion:^(NSNumber * _Nullable value, NSError * _Nullable error) {
-            NSLog(@"AmbientContextSensing.ObjectCount response %@", [value description]);
-            if (error == nil) {
-                TEMPORARY_RETURN_IGNORED RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
-            } else {
-                LogNSError("AmbientContextSensing ObjectCount read Error", error);
-                TEMPORARY_RETURN_IGNORED RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
-            }
-            SetCommandExitStatus(error);
-        }];
-        return CHIP_NO_ERROR;
-    }
-};
-
-class SubscribeAttributeAmbientContextSensingObjectCount : public SubscribeAttribute {
-public:
-    SubscribeAttributeAmbientContextSensingObjectCount()
-        : SubscribeAttribute("object-count")
-    {
-    }
-
-    ~SubscribeAttributeAmbientContextSensingObjectCount()
-    {
-    }
-
-    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
-    {
-        constexpr chip::ClusterId clusterId = chip::app::Clusters::AmbientContextSensing::Id;
-        constexpr chip::CommandId attributeId = chip::app::Clusters::AmbientContextSensing::Attributes::ObjectCount::Id;
-
-        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
-        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
-        __auto_type * cluster = [[MTRBaseClusterAmbientContextSensing alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
-        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
-        if (mKeepSubscriptions.HasValue()) {
-            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
-        }
-        if (mFabricFiltered.HasValue()) {
-            params.filterByFabric = mFabricFiltered.Value();
-        }
-        if (mAutoResubscribe.HasValue()) {
-            params.resubscribeAutomatically = mAutoResubscribe.Value();
-        }
-        [cluster subscribeAttributeObjectCountWithParams:params
-            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
-            reportHandler:^(NSNumber * _Nullable value, NSError * _Nullable error) {
-                NSLog(@"AmbientContextSensing.ObjectCount response %@", [value description]);
+                NSLog(@"AmbientContextSensing.ObjectCountReached response %@", [value description]);
                 if (error == nil) {
                     TEMPORARY_RETURN_IGNORED RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
                 } else {
@@ -139627,91 +139350,6 @@ public:
             subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
             reportHandler:^(NSArray * _Nullable value, NSError * _Nullable error) {
                 NSLog(@"AmbientContextSensing.PredictedActivity response %@", [value description]);
-                if (error == nil) {
-                    TEMPORARY_RETURN_IGNORED RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
-                } else {
-                    TEMPORARY_RETURN_IGNORED RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
-                }
-                SetCommandExitStatus(error);
-            }];
-
-        return CHIP_NO_ERROR;
-    }
-};
-
-#endif // MTR_ENABLE_PROVISIONAL
-#if MTR_ENABLE_PROVISIONAL
-
-/*
- * Attribute PrivacyModeEnabled
- */
-class ReadAmbientContextSensingPrivacyModeEnabled : public ReadAttribute {
-public:
-    ReadAmbientContextSensingPrivacyModeEnabled()
-        : ReadAttribute("privacy-mode-enabled")
-    {
-    }
-
-    ~ReadAmbientContextSensingPrivacyModeEnabled()
-    {
-    }
-
-    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
-    {
-        constexpr chip::ClusterId clusterId = chip::app::Clusters::AmbientContextSensing::Id;
-        constexpr chip::AttributeId attributeId = chip::app::Clusters::AmbientContextSensing::Attributes::PrivacyModeEnabled::Id;
-
-        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
-
-        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
-        __auto_type * cluster = [[MTRBaseClusterAmbientContextSensing alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
-        [cluster readAttributePrivacyModeEnabledWithCompletion:^(NSNumber * _Nullable value, NSError * _Nullable error) {
-            NSLog(@"AmbientContextSensing.PrivacyModeEnabled response %@", [value description]);
-            if (error == nil) {
-                TEMPORARY_RETURN_IGNORED RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
-            } else {
-                LogNSError("AmbientContextSensing PrivacyModeEnabled read Error", error);
-                TEMPORARY_RETURN_IGNORED RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
-            }
-            SetCommandExitStatus(error);
-        }];
-        return CHIP_NO_ERROR;
-    }
-};
-
-class SubscribeAttributeAmbientContextSensingPrivacyModeEnabled : public SubscribeAttribute {
-public:
-    SubscribeAttributeAmbientContextSensingPrivacyModeEnabled()
-        : SubscribeAttribute("privacy-mode-enabled")
-    {
-    }
-
-    ~SubscribeAttributeAmbientContextSensingPrivacyModeEnabled()
-    {
-    }
-
-    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
-    {
-        constexpr chip::ClusterId clusterId = chip::app::Clusters::AmbientContextSensing::Id;
-        constexpr chip::CommandId attributeId = chip::app::Clusters::AmbientContextSensing::Attributes::PrivacyModeEnabled::Id;
-
-        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
-        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
-        __auto_type * cluster = [[MTRBaseClusterAmbientContextSensing alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
-        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
-        if (mKeepSubscriptions.HasValue()) {
-            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
-        }
-        if (mFabricFiltered.HasValue()) {
-            params.filterByFabric = mFabricFiltered.Value();
-        }
-        if (mAutoResubscribe.HasValue()) {
-            params.resubscribeAutomatically = mAutoResubscribe.Value();
-        }
-        [cluster subscribeAttributePrivacyModeEnabledWithParams:params
-            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
-            reportHandler:^(NSNumber * _Nullable value, NSError * _Nullable error) {
-                NSLog(@"AmbientContextSensing.PrivacyModeEnabled response %@", [value description]);
                 if (error == nil) {
                     TEMPORARY_RETURN_IGNORED RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
                 } else {
@@ -164594,6 +164232,8 @@ public:
         : ClusterCommand("solicit-offer")
         , mComplex_ICEServers(&mRequest.ICEServers)
         , mComplex_SFrameConfig(&mRequest.SFrameConfig)
+        , mComplex_VideoStreams(&mRequest.videoStreams)
+        , mComplex_AudioStreams(&mRequest.audioStreams)
     {
 #if MTR_ENABLE_PROVISIONAL
         AddArgument("StreamUsage", 0, UINT8_MAX, &mRequest.streamUsage);
@@ -164618,6 +164258,12 @@ public:
 #endif // MTR_ENABLE_PROVISIONAL
 #if MTR_ENABLE_PROVISIONAL
         AddArgument("SFrameConfig", &mComplex_SFrameConfig);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("VideoStreams", &mComplex_VideoStreams);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("AudioStreams", &mComplex_AudioStreams);
 #endif // MTR_ENABLE_PROVISIONAL
         ClusterCommand::AddArguments();
     }
@@ -164724,6 +164370,36 @@ public:
             params.sFrameConfig = nil;
         }
 #endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        if (mRequest.videoStreams.HasValue()) {
+            { // Scope for our temporary variables
+                auto * array_1 = [NSMutableArray new];
+                for (auto & entry_1 : mRequest.videoStreams.Value()) {
+                    NSNumber * newElement_1;
+                    newElement_1 = [NSNumber numberWithUnsignedShort:entry_1];
+                    [array_1 addObject:newElement_1];
+                }
+                params.videoStreams = array_1;
+            }
+        } else {
+            params.videoStreams = nil;
+        }
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        if (mRequest.audioStreams.HasValue()) {
+            { // Scope for our temporary variables
+                auto * array_1 = [NSMutableArray new];
+                for (auto & entry_1 : mRequest.audioStreams.Value()) {
+                    NSNumber * newElement_1;
+                    newElement_1 = [NSNumber numberWithUnsignedShort:entry_1];
+                    [array_1 addObject:newElement_1];
+                }
+                params.audioStreams = array_1;
+            }
+        } else {
+            params.audioStreams = nil;
+        }
+#endif // MTR_ENABLE_PROVISIONAL
         uint16_t repeatCount = mRepeatCount.ValueOr(1);
         uint16_t __block responsesNeeded = repeatCount;
         while (repeatCount--) {
@@ -164753,6 +164429,8 @@ private:
     chip::app::Clusters::WebRTCTransportProvider::Commands::SolicitOffer::Type mRequest;
     TypedComplexArgument<chip::Optional<chip::app::DataModel::List<const chip::app::Clusters::Globals::Structs::ICEServerStruct::Type>>> mComplex_ICEServers;
     TypedComplexArgument<chip::Optional<chip::app::Clusters::WebRTCTransportProvider::Structs::SFrameStruct::Type>> mComplex_SFrameConfig;
+    TypedComplexArgument<chip::Optional<chip::app::DataModel::List<const uint16_t>>> mComplex_VideoStreams;
+    TypedComplexArgument<chip::Optional<chip::app::DataModel::List<const uint16_t>>> mComplex_AudioStreams;
 };
 
 #endif // MTR_ENABLE_PROVISIONAL
@@ -164766,6 +164444,8 @@ public:
         : ClusterCommand("provide-offer")
         , mComplex_ICEServers(&mRequest.ICEServers)
         , mComplex_SFrameConfig(&mRequest.SFrameConfig)
+        , mComplex_VideoStreams(&mRequest.videoStreams)
+        , mComplex_AudioStreams(&mRequest.audioStreams)
     {
 #if MTR_ENABLE_PROVISIONAL
         AddArgument("WebRTCSessionID", 0, UINT16_MAX, &mRequest.webRTCSessionID);
@@ -164796,6 +164476,12 @@ public:
 #endif // MTR_ENABLE_PROVISIONAL
 #if MTR_ENABLE_PROVISIONAL
         AddArgument("SFrameConfig", &mComplex_SFrameConfig);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("VideoStreams", &mComplex_VideoStreams);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("AudioStreams", &mComplex_AudioStreams);
 #endif // MTR_ENABLE_PROVISIONAL
         ClusterCommand::AddArguments();
     }
@@ -164912,6 +164598,36 @@ public:
             params.sFrameConfig = nil;
         }
 #endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        if (mRequest.videoStreams.HasValue()) {
+            { // Scope for our temporary variables
+                auto * array_1 = [NSMutableArray new];
+                for (auto & entry_1 : mRequest.videoStreams.Value()) {
+                    NSNumber * newElement_1;
+                    newElement_1 = [NSNumber numberWithUnsignedShort:entry_1];
+                    [array_1 addObject:newElement_1];
+                }
+                params.videoStreams = array_1;
+            }
+        } else {
+            params.videoStreams = nil;
+        }
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        if (mRequest.audioStreams.HasValue()) {
+            { // Scope for our temporary variables
+                auto * array_1 = [NSMutableArray new];
+                for (auto & entry_1 : mRequest.audioStreams.Value()) {
+                    NSNumber * newElement_1;
+                    newElement_1 = [NSNumber numberWithUnsignedShort:entry_1];
+                    [array_1 addObject:newElement_1];
+                }
+                params.audioStreams = array_1;
+            }
+        } else {
+            params.audioStreams = nil;
+        }
+#endif // MTR_ENABLE_PROVISIONAL
         uint16_t repeatCount = mRepeatCount.ValueOr(1);
         uint16_t __block responsesNeeded = repeatCount;
         while (repeatCount--) {
@@ -164941,6 +164657,8 @@ private:
     chip::app::Clusters::WebRTCTransportProvider::Commands::ProvideOffer::Type mRequest;
     TypedComplexArgument<chip::Optional<chip::app::DataModel::List<const chip::app::Clusters::Globals::Structs::ICEServerStruct::Type>>> mComplex_ICEServers;
     TypedComplexArgument<chip::Optional<chip::app::Clusters::WebRTCTransportProvider::Structs::SFrameStruct::Type>> mComplex_SFrameConfig;
+    TypedComplexArgument<chip::Optional<chip::app::DataModel::List<const uint16_t>>> mComplex_VideoStreams;
+    TypedComplexArgument<chip::Optional<chip::app::DataModel::List<const uint16_t>>> mComplex_AudioStreams;
 };
 
 #endif // MTR_ENABLE_PROVISIONAL
@@ -166667,6 +166385,36 @@ public:
         } else {
             params.transportOptions.expiryTime = nil;
         }
+        if (mRequest.transportOptions.videoStreams.HasValue()) {
+            { // Scope for our temporary variables
+                auto * array_2 = [NSMutableArray new];
+                for (auto & entry_2 : mRequest.transportOptions.videoStreams.Value()) {
+                    MTRPushAVStreamTransportClusterVideoStreamStruct * newElement_2;
+                    newElement_2 = [MTRPushAVStreamTransportClusterVideoStreamStruct new];
+                    newElement_2.videoStreamName = [[NSString alloc] initWithBytes:entry_2.videoStreamName.data() length:entry_2.videoStreamName.size() encoding:NSUTF8StringEncoding];
+                    newElement_2.videoStreamID = [NSNumber numberWithUnsignedShort:entry_2.videoStreamID];
+                    [array_2 addObject:newElement_2];
+                }
+                params.transportOptions.videoStreams = array_2;
+            }
+        } else {
+            params.transportOptions.videoStreams = nil;
+        }
+        if (mRequest.transportOptions.audioStreams.HasValue()) {
+            { // Scope for our temporary variables
+                auto * array_2 = [NSMutableArray new];
+                for (auto & entry_2 : mRequest.transportOptions.audioStreams.Value()) {
+                    MTRPushAVStreamTransportClusterAudioStreamStruct * newElement_2;
+                    newElement_2 = [MTRPushAVStreamTransportClusterAudioStreamStruct new];
+                    newElement_2.audioStreamName = [[NSString alloc] initWithBytes:entry_2.audioStreamName.data() length:entry_2.audioStreamName.size() encoding:NSUTF8StringEncoding];
+                    newElement_2.audioStreamID = [NSNumber numberWithUnsignedShort:entry_2.audioStreamID];
+                    [array_2 addObject:newElement_2];
+                }
+                params.transportOptions.audioStreams = array_2;
+            }
+        } else {
+            params.transportOptions.audioStreams = nil;
+        }
 #endif // MTR_ENABLE_PROVISIONAL
         uint16_t repeatCount = mRepeatCount.ValueOr(1);
         uint16_t __block responsesNeeded = repeatCount;
@@ -166892,6 +166640,36 @@ public:
             params.transportOptions.expiryTime = [NSNumber numberWithUnsignedInt:mRequest.transportOptions.expiryTime.Value()];
         } else {
             params.transportOptions.expiryTime = nil;
+        }
+        if (mRequest.transportOptions.videoStreams.HasValue()) {
+            { // Scope for our temporary variables
+                auto * array_2 = [NSMutableArray new];
+                for (auto & entry_2 : mRequest.transportOptions.videoStreams.Value()) {
+                    MTRPushAVStreamTransportClusterVideoStreamStruct * newElement_2;
+                    newElement_2 = [MTRPushAVStreamTransportClusterVideoStreamStruct new];
+                    newElement_2.videoStreamName = [[NSString alloc] initWithBytes:entry_2.videoStreamName.data() length:entry_2.videoStreamName.size() encoding:NSUTF8StringEncoding];
+                    newElement_2.videoStreamID = [NSNumber numberWithUnsignedShort:entry_2.videoStreamID];
+                    [array_2 addObject:newElement_2];
+                }
+                params.transportOptions.videoStreams = array_2;
+            }
+        } else {
+            params.transportOptions.videoStreams = nil;
+        }
+        if (mRequest.transportOptions.audioStreams.HasValue()) {
+            { // Scope for our temporary variables
+                auto * array_2 = [NSMutableArray new];
+                for (auto & entry_2 : mRequest.transportOptions.audioStreams.Value()) {
+                    MTRPushAVStreamTransportClusterAudioStreamStruct * newElement_2;
+                    newElement_2 = [MTRPushAVStreamTransportClusterAudioStreamStruct new];
+                    newElement_2.audioStreamName = [[NSString alloc] initWithBytes:entry_2.audioStreamName.data() length:entry_2.audioStreamName.size() encoding:NSUTF8StringEncoding];
+                    newElement_2.audioStreamID = [NSNumber numberWithUnsignedShort:entry_2.audioStreamID];
+                    [array_2 addObject:newElement_2];
+                }
+                params.transportOptions.audioStreams = array_2;
+            }
+        } else {
+            params.transportOptions.audioStreams = nil;
         }
 #endif // MTR_ENABLE_PROVISIONAL
         uint16_t repeatCount = mRepeatCount.ValueOr(1);
@@ -167749,6 +167527,7 @@ public:
 | * ClusterRevision                                                   | 0xFFFD |
 |------------------------------------------------------------------------------|
 | Events:                                                             |        |
+| * ChimeStartedPlaying                                               | 0x0000 |
 \*----------------------------------------------------------------------------*/
 
 #if MTR_ENABLE_PROVISIONAL
@@ -167760,6 +167539,9 @@ public:
     ChimePlayChimeSound()
         : ClusterCommand("play-chime-sound")
     {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("ChimeID", 0, UINT8_MAX, &mRequest.chimeID);
+#endif // MTR_ENABLE_PROVISIONAL
         ClusterCommand::AddArguments();
     }
 
@@ -167774,6 +167556,13 @@ public:
         __auto_type * cluster = [[MTRBaseClusterChime alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
         __auto_type * params = [[MTRChimeClusterPlayChimeSoundParams alloc] init];
         params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        if (mRequest.chimeID.HasValue()) {
+            params.chimeID = [NSNumber numberWithUnsignedChar:mRequest.chimeID.Value()];
+        } else {
+            params.chimeID = nil;
+        }
+#endif // MTR_ENABLE_PROVISIONAL
         uint16_t repeatCount = mRepeatCount.ValueOr(1);
         uint16_t __block responsesNeeded = repeatCount;
         while (repeatCount--) {
@@ -167794,6 +167583,7 @@ public:
     }
 
 private:
+    chip::app::Clusters::Chime::Commands::PlayChimeSound::Type mRequest;
 };
 
 #endif // MTR_ENABLE_PROVISIONAL
@@ -197120,9 +196910,6 @@ void registerClusterGroupcast(Commands & commands)
         make_unique<GroupcastUpdateGroupKey>(), //
 #endif // MTR_ENABLE_PROVISIONAL
 #if MTR_ENABLE_PROVISIONAL
-        make_unique<GroupcastExpireGracePeriod>(), //
-#endif // MTR_ENABLE_PROVISIONAL
-#if MTR_ENABLE_PROVISIONAL
         make_unique<GroupcastConfigureAuxiliaryACL>(), //
 #endif // MTR_ENABLE_PROVISIONAL
         make_unique<ReadAttribute>(Id), //
@@ -199840,17 +199627,8 @@ void registerClusterAmbientContextSensing(Commands & commands)
         make_unique<SubscribeAttributeAmbientContextSensingSimultaneousDetectionLimit>(), //
 #endif // MTR_ENABLE_PROVISIONAL
 #if MTR_ENABLE_PROVISIONAL
-        make_unique<ReadAmbientContextSensingCountThresholdReached>(), //
-        make_unique<SubscribeAttributeAmbientContextSensingCountThresholdReached>(), //
-#endif // MTR_ENABLE_PROVISIONAL
-#if MTR_ENABLE_PROVISIONAL
-        make_unique<ReadAmbientContextSensingCountThreshold>(), //
-        make_unique<WriteAmbientContextSensingCountThreshold>(), //
-        make_unique<SubscribeAttributeAmbientContextSensingCountThreshold>(), //
-#endif // MTR_ENABLE_PROVISIONAL
-#if MTR_ENABLE_PROVISIONAL
-        make_unique<ReadAmbientContextSensingObjectCount>(), //
-        make_unique<SubscribeAttributeAmbientContextSensingObjectCount>(), //
+        make_unique<ReadAmbientContextSensingObjectCountReached>(), //
+        make_unique<SubscribeAttributeAmbientContextSensingObjectCountReached>(), //
 #endif // MTR_ENABLE_PROVISIONAL
 #if MTR_ENABLE_PROVISIONAL
         make_unique<ReadAmbientContextSensingHoldTime>(), //
@@ -199864,10 +199642,6 @@ void registerClusterAmbientContextSensing(Commands & commands)
 #if MTR_ENABLE_PROVISIONAL
         make_unique<ReadAmbientContextSensingPredictedActivity>(), //
         make_unique<SubscribeAttributeAmbientContextSensingPredictedActivity>(), //
-#endif // MTR_ENABLE_PROVISIONAL
-#if MTR_ENABLE_PROVISIONAL
-        make_unique<ReadAmbientContextSensingPrivacyModeEnabled>(), //
-        make_unique<SubscribeAttributeAmbientContextSensingPrivacyModeEnabled>(), //
 #endif // MTR_ENABLE_PROVISIONAL
 #if MTR_ENABLE_PROVISIONAL
         make_unique<ReadAmbientContextSensingGeneratedCommandList>(), //
@@ -199889,6 +199663,8 @@ void registerClusterAmbientContextSensing(Commands & commands)
         make_unique<ReadAmbientContextSensingClusterRevision>(), //
         make_unique<SubscribeAttributeAmbientContextSensingClusterRevision>(), //
 #endif // MTR_ENABLE_PROVISIONAL
+        make_unique<ReadEvent>(Id), //
+        make_unique<SubscribeEvent>(Id), //
     };
 
     commands.RegisterCluster(clusterName, clusterCommands);
@@ -201229,6 +201005,8 @@ void registerClusterChime(Commands & commands)
         make_unique<ReadChimeClusterRevision>(), //
         make_unique<SubscribeAttributeChimeClusterRevision>(), //
 #endif // MTR_ENABLE_PROVISIONAL
+        make_unique<ReadEvent>(Id), //
+        make_unique<SubscribeEvent>(Id), //
     };
 
     commands.RegisterCluster(clusterName, clusterCommands);
